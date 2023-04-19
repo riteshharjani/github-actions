@@ -1,0 +1,14 @@
+#cloud-config
+users:
+  - name: qemu
+    groups: root
+    passwd: $6$rounds=4096$3epQefSKvgOeZ/fo$2myoT8cKgl72CrO8kBsKipmf7Rci4aaAt1tbis1FUntBDNXfW7qFH412OlO9n7YVtat.LSma5fJByoHT1.0FS1
+    lock_passwd: false
+    gecos: qemu user
+    groups: sudo, users, root
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    shell: /bin/bash
+runcmd:
+  - [ sh, -c, echo "=========START XT=========" ]
+  - [ sh, -c, echo "=========END XT=========" ]
+

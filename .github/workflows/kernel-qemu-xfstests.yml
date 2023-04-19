@@ -44,11 +44,14 @@ jobs:
         sudo apt-get install -y python3 python3-pip
         pip3 install pexpect
         sudo apt-get install -y qemu-system-x86
-        sudo apt-get install -y qemu-utils
+        sudo apt-get install -y qemu-utils cloud-image-utils
     - name: Set up Python 3.x
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+    - name: Cloud-init image
+      run: |
+          cloud-localds user-data.img user-data.yaml
     - name: Download Ubuntu cloud image
       run: |
         wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
