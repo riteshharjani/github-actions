@@ -73,6 +73,10 @@ child.expect('root@ubuntu.*')
 child.sendline("apt-get install -y python3 python3-pip")
 child.expect('root@ubuntu.*')
 
+child.sendline("pip3 install --user avocado-framework avocado-framework-plugin-varianter-yaml-to-mux")
+
+child.expect('root@ubuntu.*')
+
 child.sendline("pip3 install avocado-framework avocado-framework-plugin-varianter-yaml-to-mux")
 child.expect('root@ubuntu.*')
 
