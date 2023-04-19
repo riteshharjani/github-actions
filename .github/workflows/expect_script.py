@@ -38,14 +38,14 @@ child = pexpect.spawn(qemu_command, timeout=3600, encoding="utf-8")
 child.logfile = sys.stdout
 
 
-patterns = ["VFS: Cannot open root device", "ubuntu login:"]
+#patterns = ["VFS: Cannot open root device", "ubuntu login:"]
 
 # Log in to the system
-matched_idx = child.expect(patterns)
-if matched_idx == 0:
-    print("Failed run")
-    exit(-1)
-
+#matched_idx = child.expect(patterns)
+#if matched_idx == 0:
+#    print("Failed run")
+#    exit(-1)
+child.expect('ubuntu login:')
 child.sendline('qemu')
 child.expect('Password:')
 child.sendline('123')
