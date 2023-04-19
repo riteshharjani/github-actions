@@ -2,7 +2,9 @@ name: kernel + qemu + xfstests
 
 on:
   workflow_dispatch:
-
+  push:
+      branches:
+        - '**'
 jobs:
   build_kernel:
     runs-on: ubuntu-latest
