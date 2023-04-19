@@ -32,13 +32,20 @@ qemu_command = f'''qemu-system-x86_64 \
                  -serial telnet:127.0.0.1:1234,server,nowait \
                  -fsdev local,id=shared_test_dev,path=/root,security_model=none \
                  -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared \
-	         -net nic,model=virtio -net user,hostfwd=tcp:127.0.0.1:2001-:22 \
+	             -net nic,model=virtio -net user,hostfwd=tcp:127.0.0.1:2001-:22 \
                  -append "console=ttyS0,115200n8 root=/dev/sda1'''
-child = pexpect.spawn(qemu_command, timeout=3000, encoding="utf-8")
+child = pexpect.spawn(qemu_command, timeout=3600, encoding="utf-8")
 child.logfile = sys.stdout
 
+
+patterns = ["VFS: Cannot open root device", "ubuntu login:"]
+
 # Log in to the system
-child.expect('ubuntu login:')
+matched_idx = child.expect(patterns)
+if matched_idx == 0:
+    print("Failed run")
+    exit(-1)
+
 child.sendline('qemu')
 child.expect('Password:')
 child.sendline('123')
