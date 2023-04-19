@@ -51,7 +51,7 @@ jobs:
         python-version: '3.x'
     - name: Download Ubuntu cloud image
       run: |
-        wget https://cloud-images.ubuntu.com/focal/current/jammy-server-cloudimg-amd64.img
+        wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
         qemu-img resize jammy-server-cloudimg-amd64.img +20G
     - name: Run expect script
       continue-on-error: true
