@@ -22,7 +22,6 @@ cloud_image_path = './jammy-server-cloudimg-amd64.img'
 #                 -netdev user,id=vmnic,hostfwd=tcp::12125-:22 \
 # Create a pexpect object to run the QEMU command
 qemu_command = f'''qemu-system-x86_64 \
-                 -enable-kvm
                  -smp 2 \
                  -nographic \
                  -m 2048 \
