@@ -1,7 +1,5 @@
 import pexpect
 import sys
-import requests
-from tqdm import tqdm
 import re
 
 #url = 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
