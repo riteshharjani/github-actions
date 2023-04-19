@@ -42,20 +42,21 @@ jobs:
       run: |
         sudo apt-get update && sudo apt-get install -y gcc
         sudo apt-get install -y python3 python3-pip
-        pip3 install pexpect
         sudo apt-get install -y qemu-system-x86
         sudo apt-get install -y qemu-utils cloud-image-utils
     - name: Set up Python 3.x
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+    - name: Install pexpect
+      run: sudo pip3 install pexpect
     - name: Cloud-init image
       run: |
-          cloud-localds user-data.img user-data.yaml
+          sudo cloud-localds user-data.img user-data.yaml
     - name: Download Ubuntu cloud image
       run: |
-        wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
-        qemu-img resize jammy-server-cloudimg-amd64.img +20G
+        sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
+        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
     - name: Run expect script
       continue-on-error: true
       run: |
@@ -64,4 +65,4 @@ jobs:
         mount
         df -h
         cat .github/workflows/expect_script.py
-        python3 .github/workflows/expect_script.py
+        sudo python3 .github/workflows/expect_script.py
