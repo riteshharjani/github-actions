@@ -30,6 +30,6 @@ jobs:
       if: always()
       with:
         detailed_summary: true
-        detailed_summary: True
+        include_passed: true
         report_paths: 'results/job*/results*/result.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
