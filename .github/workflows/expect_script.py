@@ -106,7 +106,7 @@ child.expect('root@ubuntu.*#')
 child.sendline("bash -c 'echo 9 > /proc/sys/kernel/printk'")
 child.expect('root@ubuntu.*#')
 
-child.sendline("avocado run fs/xfstests.py -m fs/xfstests.py.data/tests.yaml --max-parallel-tasks 1")
+child.sendline("avocado --show test run fs/xfstests.py -m fs/xfstests.py.data/tests.yaml --max-parallel-tasks 1")
 child.expect('root@ubuntu.*#')
 
 print(child.before)
