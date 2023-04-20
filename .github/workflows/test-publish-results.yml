@@ -22,7 +22,7 @@ jobs:
         name: xfstests-results
         path: results/
     - name: Publish results
-      uses: dorny/test-reporter@v2
+      uses: dorny/test-reporter@v1
       if: always()
       with:
         path: 'results/job*/results*/result.xml'
