@@ -30,7 +30,7 @@ qemu_command = f'''qemu-system-x86_64 \
                  -drive file=user-data.img,format=raw \
                  -monitor telnet:127.0.0.1:55555,server,nowait -serial mon:stdio \
                  -serial telnet:127.0.0.1:1234,server,nowait \
-                 -fsdev local,id=shared_test_dev,path=/root,security_model=none \
+                 -fsdev local,id=shared_test_dev,path=/tmp,security_model=none \
                  -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared \
 	             -net nic,model=virtio -net user,hostfwd=tcp:127.0.0.1:2001-:22 \
                  -append "console=ttyS0,115200n8 root=/dev/sda1'''
