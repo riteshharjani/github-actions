@@ -25,6 +25,7 @@ jobs:
       uses: dorny/test-reporter@v1
       if: always()
       with:
+        name: xfstests-results
         path: 'results/job*/results*/result.xml'
 #    - name: Publish results
 #      uses: EnricoMi/publish-unit-test-result-action@v2
