@@ -85,13 +85,13 @@ jobs:
         df -h
         cat .github/workflows/expect_script.py
         sudo python3 .github/workflows/expect_script.py
-        sudo chmod -R o+rx /root/results/
-        sudo ls /root/results/
+        sudo chown -R $USER:$USER /root/results
+        sudo ls -al /root/results/
     - name: Upload xfstests artifacts
       uses: actions/upload-artifact@v3
       with:
         name: xfstests_artifacts
-        path: /root/host_shared/results/
+        path: /root/results/
   publish_results:
     needs: run_qemu
     runs-on: ubuntu-latest
@@ -103,7 +103,7 @@ jobs:
       with:
         name: xfstests_artifacts
     - name: Update xfstests.global name
-      run: find /root/host_shared/results/ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
+      run: find /root/results/ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
     - name: Publish results
       continue-on-error: true
       uses: mikepenz/action-junit-report@v3
@@ -113,7 +113,7 @@ jobs:
         detailed_summary: true
         annotate_notice: true
         include_passed: true
-        report_paths: '/root/host_shared/results/job*/results*/*.xml'
+        report_paths: '/root/results/job*/results*/*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
 
