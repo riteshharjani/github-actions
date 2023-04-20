@@ -27,6 +27,5 @@ jobs:
       if: always()
       with:
         files: |
-          results/**/*.xml
-          results/**/*.json
+          results/jobs*/results*/result.xml
 
