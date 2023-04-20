@@ -9,6 +9,7 @@ permissions:
   contents: read
   checks: write
   id-token: write
+  pull-requests: write
 
 jobs:
   build:
@@ -16,22 +17,38 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-
     - name: Do nothing
       run: echo "Do nothing"
-
     - name: Upload xfstests artifacts
       uses: actions/upload-artifact@v2
       with:
         name: xfstests-results
         path: results/
     - name: Publish results
+      continue-on-error: true
       uses: mikepenz/action-junit-report@v2
       if: always()
       with:
         name: xfstests-results
         report_paths: 'results/job*/results*/result.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Test Report
+      continue-on-error: true
+      uses: dorny/test-reporter@v1
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: JEST Tests            # Name of the check run which will be created
+        path: results/job*/results*/result.xml
+        reporter: jest-junit        # Format of test results
+    - name: Publish Test Results
+      continue-on-error: true
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: |
+          test-results/**/*.xml
+          test-results/**/*.trx
+          test-results/**/*.json
 #    - name: Publish results
 #      uses: EnricoMi/publish-unit-test-result-action@v2
 #      if: always()
