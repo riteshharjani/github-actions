@@ -2,9 +2,9 @@ name: publish test results
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "**"
+      #  push:
+      #    branches:
+      #      - "**"
 permissions:
   contents: read
   checks: write

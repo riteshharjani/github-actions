@@ -2,9 +2,9 @@ name: kernel + qemu + xfstests
 
 on:
   workflow_dispatch:
-      #  push:
-      #      branches:
-      #        - '**'
+  push:
+      branches:
+        - '**'
 jobs:
   build_kernel:
     runs-on: ubuntu-latest
@@ -76,15 +76,32 @@ jobs:
         sudo python3 .github/workflows/expect_script.py
         ls /root/results/
     - name: Upload xfstests artifacts
-      run: |
-        uses: actions/upload-artifacts@v3
-        with:
-          name: xfstests-results
-          path: /root/host_shared/results
-    - name: Publish test results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+      uses: actions/upload-artifact@v3
+      with:
+        name: xfstests_artifacts
+        path: /root/host_shared/results/
+  publish_results:
+    needs: run_qemu
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - name: Download xfstests artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: xfstests_artifacts
+    - name: Update xfstests.global name
+      run: find /root/host_shared/results/ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
+    - name: Publish results
+      continue-on-error: true
+      uses: mikepenz/action-junit-report@v3
       if: always()
       with:
-        files: |
-          results/**/*.xml
-          results/**/*.json
+        commit: ${{ github.sha }}
+        detailed_summary: true
+        annotate_notice: true
+        include_passed: true
+        report_paths: '/root/host_shared/results/job*/results*/*.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+

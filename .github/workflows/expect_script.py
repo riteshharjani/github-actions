@@ -119,9 +119,8 @@ else:
     job_log_path = ""
     print("Job log path not found")
 
-child.sendline(f"cat {job_log_path}")
-child.expect('root@ubuntu.*#')
-
+#child.sendline(f"cat {job_log_path}")
+#child.expect('root@ubuntu.*#')
 
 # Exit QEMU
 child.sendline('sudo poweroff')
