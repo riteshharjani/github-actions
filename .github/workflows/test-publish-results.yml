@@ -9,10 +9,10 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-
+        - name: Check out repository
+          uses: actions/checkout@v3
         - name: Do nothing
           run: echo "Do nothing"
-
         - name: Publish results
           uses: EnricoMi/publish-unit-test-result-action@v2
           if: always()
