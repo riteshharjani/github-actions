@@ -86,7 +86,7 @@ jobs:
         cat .github/workflows/expect_script.py
 
         #        sudo python3 .github/workflows/expect_script.py
-        sudo cp results/* /tmp/
+        sudo cp -r results/* /tmp/
         sudo chown -R $USER:$USER /tmp/results
         sudo ls -al /tmp/results/
     - name: Upload xfstests artifacts
