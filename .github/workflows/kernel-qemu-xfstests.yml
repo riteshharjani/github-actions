@@ -112,6 +112,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: xfstests_artifacts
+        path: results
     - name: List downloaded artifact contents
       continue-on-error: true
       run: |
@@ -120,7 +121,7 @@ jobs:
         ls -al ../
         ls -al ../../
     - name: Update xfstests.global name
-      run: find ./ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
+      run: find results/ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
     - name: Publish results
       continue-on-error: true
       uses: mikepenz/action-junit-report@v3
@@ -130,7 +131,7 @@ jobs:
         detailed_summary: true
         annotate_notice: true
         include_passed: true
-        report_paths: '/tmp/results/job*/results*/*.xml'
+        report_paths: 'results/job*/results*/*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
 
