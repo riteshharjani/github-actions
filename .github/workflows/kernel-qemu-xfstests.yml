@@ -75,12 +75,12 @@ jobs:
 #        sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
 #        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
 
-#    # Download from self hosted
-#    - name: Download Ubuntu cloud image
-#      run: |
-#        sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
-#        gzip -d jammy-server-cloudimg-amd64.img.gz
-#        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
+    # Download from self hosted
+    - name: Download Ubuntu cloud image
+      run: |
+        sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
+        gzip -d jammy-server-cloudimg-amd64.img.gz
+        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
     - name: Run expect script
 #      continue-on-error: true
       run: |
@@ -92,9 +92,7 @@ jobs:
         df -h
         cat .github/workflows/expect_script.py
 
-        #        sudo python3 .github/workflows/expect_script.py
-        sudo mkdir /tmp/results
-        sudo cp -r results/* /tmp/results/
+        sudo python3 .github/workflows/expect_script.py
         sudo chown -R $USER:$USER /tmp/results
         sudo ls -al /tmp/results/
     - name: Upload xfstests artifacts
@@ -113,13 +111,6 @@ jobs:
       with:
         name: xfstests_artifacts
         path: results
-    - name: List downloaded artifact contents
-      continue-on-error: true
-      run: |
-        pwd
-        ls -la ./
-        ls -al ../
-        ls -al ../../
     - name: Update xfstests.global name
       run: find results/ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
     - name: Publish results
