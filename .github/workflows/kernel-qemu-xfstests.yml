@@ -68,12 +68,12 @@ jobs:
 #        sudo wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
 #        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
 
-    # Download from self hosted
-    - name: Download Ubuntu cloud image
-      run: |
-        sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
-        gzip -d jammy-server-cloudimg-amd64.img.gz
-        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
+#    # Download from self hosted
+#    - name: Download Ubuntu cloud image
+#      run: |
+#        sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
+#        gzip -d jammy-server-cloudimg-amd64.img.gz
+#        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
     - name: Run expect script
 #      continue-on-error: true
       run: |
