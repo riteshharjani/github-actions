@@ -21,11 +21,15 @@ jobs:
       with:
         name: xfstests-results
         path: results/
-
     - name: Publish results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+      uses: dorny/test-reporter@v2
       if: always()
       with:
-        files: |
-          results/job*/results*/result.xml
+        path: 'results/job*/results*/result.xml'
+#    - name: Publish results
+#      uses: EnricoMi/publish-unit-test-result-action@v2
+#      if: always()
+#      with:
+#        files: |
+#          results/job*/results*/result.xml
 
