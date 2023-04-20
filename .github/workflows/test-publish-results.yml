@@ -30,5 +30,6 @@ jobs:
       if: always()
       with:
         name: xfstests-results
+        detailed_summary: true
         report_paths: 'results/job*/results*/result.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
