@@ -83,7 +83,6 @@ jobs:
         ls
         mount
         df -h
-        mkdir /tmp
         cat .github/workflows/expect_script.py
         sudo python3 .github/workflows/expect_script.py
         sudo chown -R $USER:$USER /tmp/results
