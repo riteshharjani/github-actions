@@ -22,12 +22,11 @@ jobs:
         name: xfstests-results
         path: results/
     - name: Publish results
-      uses: dorny/test-reporter@v1
+      uses: mikepenz/action-junit-report@v3
       if: always()
       with:
         name: xfstests-results
-        path: 'results/job*/results*/result.xml'
-        reporter: jest-junit
+        report_paths: 'results/job*/results*/result.xml'
 #    - name: Publish results
 #      uses: EnricoMi/publish-unit-test-result-action@v2
 #      if: always()
