@@ -65,7 +65,7 @@ for command in commands:
     #print(f'Output of \'{command}\':')
     #print(child.before)
 
-child.sendline("sudo apt -y remove needrestart")
+child.sendline("sudo apt -y remove needrestart unattended-upgrades")
 child.expect('root@ubuntu.*#')
 child.sendline("apt-get update")
 child.expect('root@ubuntu.*#')
