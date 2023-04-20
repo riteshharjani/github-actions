@@ -101,7 +101,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: xfstests_artifacts
-        path: /tmp/results/
+        path: /tmp/results
   publish_results:
     needs: run_qemu
     runs-on: ubuntu-latest
@@ -114,7 +114,11 @@ jobs:
         name: xfstests_artifacts
     - name: List downloaded artifact contents
       continue-on-error: true
-      run: ls -la ./
+      run: |
+        pwd
+        ls -la ./
+        ls -al ../
+        ls -al ../../
     - name: Update xfstests.global name
       run: find ./ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
     - name: Publish results
