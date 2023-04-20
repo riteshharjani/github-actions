@@ -106,9 +106,10 @@ jobs:
       with:
         name: xfstests_artifacts
     - name: List downloaded artifact contents
-      run: ls -la "${{ github.workspace }}/xfstests_artifacts"
+      continue-on-error: true
+      run: ls -la ./
     - name: Update xfstests.global name
-      run: find "${{ github.workspace }}/xfstests_artifacts/" -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
+      run: find ./ -name "result.xml" -exec sh -c 'parent_dir=$(basename $(dirname {})); sed -i "s/xfstests.global/xfstests-${parent_dir}/g" {}' \;
     - name: Publish results
       continue-on-error: true
       uses: mikepenz/action-junit-report@v3
