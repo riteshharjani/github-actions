@@ -74,7 +74,8 @@ jobs:
         df -h
         cat .github/workflows/expect_script.py
         sudo python3 .github/workflows/expect_script.py
-        ls /root/results/
+        sudo chmod -R o+rx /root/results/
+        sudo ls /root/results/
     - name: Upload xfstests artifacts
       uses: actions/upload-artifact@v3
       with:
