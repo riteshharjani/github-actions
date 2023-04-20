@@ -61,24 +61,24 @@ child.expect('root@ubuntu.*#')
 commands = ['ls', 'df -h', 'lsblk', 'mount', 'uname -a']
 for command in commands:
     child.sendline(command)
-    child.expect('root@ubuntu.*')
+    child.expect('root@ubuntu.*#')
     #print(f'Output of \'{command}\':')
     #print(child.before)
 
 child.sendline("sudo apt -y remove needrestart")
-child.expect('root@ubuntu.*')
+child.expect('root@ubuntu.*#')
 child.sendline("apt-get update")
-child.expect('root@ubuntu.*')
+child.expect('root@ubuntu.*#')
 
 child.sendline("apt-get install -y python3 python3-pip")
-child.expect('root@ubuntu.*')
+child.expect('root@ubuntu.*#')
 
 child.sendline("pip3 install --user avocado-framework avocado-framework-plugin-varianter-yaml-to-mux")
 
-child.expect('root@ubuntu.*')
+child.expect('root@ubuntu.*#')
 
 child.sendline("pip3 install avocado-framework avocado-framework-plugin-varianter-yaml-to-mux")
-child.expect('root@ubuntu.*')
+child.expect('root@ubuntu.*#')
 
 child.sendline("parted /dev/sda resizepart 1 100% && sudo resize2fs /dev/sda1")
 child.expect('root@ubuntu.*#')
