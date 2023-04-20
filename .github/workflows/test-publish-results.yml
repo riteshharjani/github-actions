@@ -29,7 +29,9 @@ jobs:
       uses: mikepenz/action-junit-report@v3
       if: always()
       with:
+        commit: ${{ github.sha }}
         detailed_summary: true
+        annotate_notice: true
         include_passed: true
         report_paths: 'results/job*/results*/result.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
