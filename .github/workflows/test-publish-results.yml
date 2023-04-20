@@ -1,28 +1,27 @@
 name: publish test results
 
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - "**"
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-        - name: Check out repository
-          uses: actions/checkout@v3
-        - name: Do nothing
-          run: echo "Do nothing"
-        - name: Upload xfstests artifacts
-          run: |
-            uses: actions/upload-artifacts@v3
-            with:
-              name: xfstests-results
-              path: results
-        - name: Publish results
-          uses: EnricoMi/publish-unit-test-result-action@v2
-          if: always()
-          with:
-              files: |
-                  results/**/*.xml
-                  results/**/*.json
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Do nothing
+      run: echo "Do nothing"
+    - name: Upload xfstests artifacts
+      uses: actions/upload-artifacts@v3
+      with:
+        name: xfstests-results
+        path: results
+    - name: Publish results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: |
+          results/**/*.xml
+          results/**/*.json
