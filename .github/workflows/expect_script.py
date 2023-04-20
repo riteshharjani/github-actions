@@ -22,9 +22,9 @@ cloud_image_path = './jammy-server-cloudimg-amd64.img'
 #                 -netdev user,id=vmnic,hostfwd=tcp::12125-:22 \
 # Create a pexpect object to run the QEMU command
 qemu_command = f'''qemu-system-x86_64 \
-                 -smp 2 \
+                 -smp 4 \
                  -nographic \
-                 -m 2048 \
+                 -m 8192 \
                  -kernel arch/x86/boot/bzImage \
                  -drive file={cloud_image_path},format=qcow2 \
                  -drive file=user-data.img,format=raw \
