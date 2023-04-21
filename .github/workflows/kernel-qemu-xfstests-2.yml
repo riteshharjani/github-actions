@@ -39,14 +39,6 @@ jobs:
             in_generic:
               - 'fs/**'
               - 'incldue/linux/'
-      - name: Set fs_generic output
-        id: check_generic
-        run: |
-          if [[ "${{ steps.check_paths.outputs.fs_generic }}" == "true" && "${{ steps.check_paths.outputs.in_ext2 }}" != "true" && "${{ steps.check_paths.outputs.in_ext4 }}" != "true" && "${{ steps.check_paths.outputs.in_xfs }}" != "true" && "${{ steps.check_paths.outputs.in_btrfs }}" != "true" ]]; then
-            echo "::set-output name=fs_generic::true"
-          else
-            echo "::set-output name=fs_generic::false"
-          fi
   build_kernel:
     needs: check_changes
     runs-on: ubuntu-latest
