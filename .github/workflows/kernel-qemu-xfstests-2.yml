@@ -43,7 +43,7 @@ jobs:
       - name: Set fs_generic flag
         id: set_fs_generic
         run: |
-          if [[ "${{ steps.check_paths.outputs.in_include }}" == "true" || ("${{ steps.check_paths.outputs.in_fs }}" == "true" && "${{ steps.check_paths.outputs.in_ext2 }}" != "true" && "${{ steps.check_paths.outputs.in_ext4 }}" != "true" && "${{ steps.check_paths.outputs.in_xfs }}" != "true" && "${{ steps.check_paths.outputs.in_btrfs }}" != "true") ]]; then
+          if [[ ("${{ steps.check_paths.outputs.in_include }}" == "true" || ("${{ steps.check_paths.outputs.in_fs }}" == "true") && "${{ steps.check_paths.outputs.in_ext2 }}" != "true" && "${{ steps.check_paths.outputs.in_ext4 }}" != "true" && "${{ steps.check_paths.outputs.in_xfs }}" != "true" && "${{ steps.check_paths.outputs.in_btrfs }}" != "true") ]]; then
             echo "fs_generic=true" >> $GITHUB_ENV
             echo "::set-output name=fs_generic::true"
           else
