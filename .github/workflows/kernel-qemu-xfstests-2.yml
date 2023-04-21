@@ -52,6 +52,7 @@ jobs:
           fi
   build_kernel:
     needs: check_changes
+    if: ${{ needs.check_changes.outputs.fs_generic == 'true' || needs.check_changes.outputs.in_ext2 == 'true' || needs.check_changes.outputs.in_ext4 == 'true' || needs.check_changes.outputs.in_xfs == 'true' ||  needs.check_changes.outputs.in_btrfs == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
