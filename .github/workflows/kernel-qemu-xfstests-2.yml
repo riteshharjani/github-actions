@@ -48,6 +48,7 @@ jobs:
             echo "::set-output name=fs_generic::false"
           fi
   build_kernel:
+    needs: check_changes
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
@@ -67,7 +68,7 @@ jobs:
           arch/x86/boot/bzImage
 
   ext2_tests:
-    needs: check_changes
+    needs: build_kernel
     if: ${{ needs.check_changes.outputs.in_ext2 == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
     runs-on: ubuntu-latest
     strategy:
