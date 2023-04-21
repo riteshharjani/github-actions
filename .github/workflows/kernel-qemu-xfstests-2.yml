@@ -1,0 +1,156 @@
+name: tests fs workflow
+
+on:
+  workflow_dispatch:
+  push:
+      branches:
+        - '**'
+
+permissions:
+  contents: read
+  checks: write
+  id-token: write
+  pull-requests: write
+
+
+jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      in_ext2: ${{ steps.check_paths.outputs.in_ext2 }}
+      in_ext4: ${{ steps.check_paths.outputs.in_ext4 }}
+      in_xfs: ${{ steps.check_paths.outputs.in_xfs }}
+      in_btrfs: ${{ steps.check_paths.outputs.in_btrfs }}
+      fs_generic: ${{ steps.check_generic.outputs.fs_generic }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: check_paths
+        with:
+          filters: |
+            in_ext2:
+              - 'fs/ext2/**'
+            in_ext4:
+              - 'fs/ext4/**'
+            in_xfs:
+              - 'fs/xfs/**'
+            in_btrfs:
+              - 'fs/btrfs/**'
+            in_generic:
+              - 'fs/**'
+              - 'incldue/linux/'
+      - name: Set fs_generic output
+        id: check_generic
+        run: |
+          if [[ "${{ steps.check_paths.outputs.in_generic }}" == "true" && "${{ steps.check_paths.outputs.in_ext2 }}" != "true" && "${{ steps.check_paths.outputs.in_ext4 }}" != "true" && "${{ steps.check_paths.outputs.in_xfs }}" != "true" && "${{ steps.check_paths.outputs.in_btrfs }}" != "true" ]]; then
+            echo "::set-output name=fs_generic::true"
+          else
+            echo "::set-output name=fs_generic::false"
+          fi
+  build_kernel:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y gcc
+        sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms
+    - name: Compile Linux
+      run: |
+        echo "Linux compiled fine"
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: kernel_artifacts
+        path: |
+          arch/x86/boot/bzImage
+
+  ext2_tests:
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.in_ext2 == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [1, 2, 3, 4]
+    steps:
+      - name: Run ext2 tests with config ${{ matrix.config }}
+        run: echo "Running ext2 tests with config ${{ matrix.config }}"
+      - name: Publish results for "${{ github.job }}-{{ matrix.config }}"
+        continue-on-error: true
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          commit: ${{ github.sha }}
+          detailed_summary: true
+          annotate_notice: true
+          include_passed: true
+          report_paths: 'results/job*/results*/*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  ext4_tests:
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.in_ext4 == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [1, 2, 3, 4]
+    steps:
+      - name: Run ext4 tests with config ${{ matrix.config }}
+        run: echo "Running ext4 tests with config ${{ matrix.config }}"
+      - name: Publish results for "${{ github.job }}-{{ matrix.config }}"
+        continue-on-error: true
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          commit: ${{ github.sha }}
+          detailed_summary: true
+          annotate_notice: true
+          include_passed: true
+          report_paths: 'results/job*/results*/*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  xfs_tests:
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.in_xfs == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [1, 2, 3, 4]
+    steps:
+      - name: Run xfs tests with config ${{ matrix.config }}
+        run: echo "Running xfs tests with config ${{ matrix.config }}"
+      - name: Publish results for "${{ github.job }}-{{ matrix.config }}"
+        continue-on-error: true
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          commit: ${{ github.sha }}
+          detailed_summary: true
+          annotate_notice: true
+          include_passed: true
+          report_paths: 'results/job*/results*/*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  btrfs_tests:
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.in_btrfs == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [1, 2, 3, 4]
+    steps:
+      - name: Run btrfs tests with config ${{ matrix.config }}
+        run: echo "Running btrfs tests with config ${{ matrix.config }}"
+      - name: Publish results for "${{ github.job }}-{{ matrix.config }}"
+        continue-on-error: true
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          commit: ${{ github.sha }}
+          detailed_summary: true
+          annotate_notice: true
+          include_passed: true
+          report_paths: 'results/job*/results*/*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+

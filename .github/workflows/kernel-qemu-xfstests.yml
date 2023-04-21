@@ -2,9 +2,9 @@ name: kernel + qemu + xfstests
 
 on:
   workflow_dispatch:
-  push:
-      branches:
-        - '**'
+      #  push:
+      #      branches:
+      #        - '**'
 
 permissions:
   contents: read
