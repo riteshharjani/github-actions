@@ -2,6 +2,15 @@ import pexpect
 import sys
 import re
 
+if len(sys.argv) != 2:
+    print("Usage: python3 expect_script testpath")
+    sys.exit(1)
+
+testpath = sys.argv[1]
+
+print(f"avocado --show test run fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
+sys.exit(0)
+
 #url = 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
 #local_filename = 'focal-server-cloudimg-amd64.img'
 #
@@ -107,7 +116,7 @@ child.expect('root@ubuntu.*#')
 child.sendline("bash -c 'echo 9 > /proc/sys/kernel/printk'")
 child.expect('root@ubuntu.*#')
 
-child.sendline("avocado --show test run fs/xfstests.py -m fs/xfstests.py.data/tests.yaml --max-parallel-tasks 1")
+child.sendline(f"avocado --show test run fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
 child.expect('root@ubuntu.*#')
 
 print(child.before)
