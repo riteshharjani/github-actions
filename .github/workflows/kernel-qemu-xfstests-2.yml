@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
       branches:
-        - '**'
+        - 'kernelci-*'
 
 permissions:
   contents: read
@@ -62,7 +62,7 @@ jobs:
         sudo apt-get update && sudo apt-get install -y gcc
         sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms
     - name: Compile Linux
-      continue-on-error: true
+      #continue-on-error: true
       run: |
         make defconfig
         make -j$(nproc) Werror=1
@@ -97,11 +97,6 @@ jobs:
         with:
           repository: riteshharjani/github-actions
           ref: master
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#         with:
-#           repository: riteshharjani/fsci
-#           ref: master
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -138,9 +133,9 @@ jobs:
         run: |
           rm -rf /tmp/results/
           mkdir /tmp/results
-      - name: Run ext2 tests with config ${{ matrix.config }}
+      - name: Run ${{ github.job }} tests with config ${{ matrix.config }}
         run: |
-          echo "Running ext2 tests with config ${{ matrix.config }}"
+          echo "Running ${{ github.job }} tests with config ${{ matrix.config }}"
           echo $GITHUB_WORKSPACE
           lscpu
           lsmem
@@ -181,11 +176,74 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        config: [1, 2, 3, 4]
+        config: ["ext4_4k", "ext4_1k"]
     steps:
-      - name: Run ext4 tests with config ${{ matrix.config }}
-        run: echo "Running ext4 tests with config ${{ matrix.config }}"
-      - name: Publish results for "${{ github.job }}-{{ matrix.config }}"
+        # ensure you start clean
+      - name: Clean up github workspace
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf *
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: riteshharjani/github-actions
+          ref: master
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: kernel_artifacts
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+          gcc \
+          python3 python3-pip \
+          qemu-system-x86 \
+          qemu-utils cloud-image-utils gzip
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+      - name: Install pip packages
+        run: |
+          sudo pip3 install pexpect
+          sudo pip3 install gdown
+      - name: Cloud-init image
+        run: |
+          sudo cloud-localds user-data.img user-data.yaml
+      - name: Create dummy qcow image
+        run: |
+          qemu-img create -f qcow2 jammy-server-cloudimg-amd64.img 20G
+      # Download from self hosted
+#      - name: Download Ubuntu cloud image
+#        run: |
+#          sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
+#          gzip -d jammy-server-cloudimg-amd64.img.gz
+#          sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
+      - name: Cleanup results directory
+        continue-on-error: true
+        run: |
+          rm -rf /tmp/results/
+          mkdir /tmp/results
+      - name: Run ${{ github.job }} tests with config ${{ matrix.config }}
+        run: |
+          echo "Running ${{ github.job }} tests with config ${{ matrix.config }}"
+          echo $GITHUB_WORKSPACE
+          lscpu
+          lsmem
+          pwd
+          ls
+          mount
+          df -h
+          cat tests/run_qemu_xfstests.py
+          sudo python3 tests/run_qemu_xfstests.py "fs/xfstests.py.data/${{ matrix.config }}.yaml"
+          sudo chown -R $USER:$USER /tmp/results
+          sudo ls -al /tmp/results/
+      - name: Upload test results for "${{ github.job }}-${{ matrix.config }}"
+        uses: actions/upload-artifact@v3
+        with:
+          name: xfstests_artifacts_${{ github.job }}_${{ matrix.config }}
+          path: /tmp/results/
+      - name: Publish results for "${{ github.job }}-${{ matrix.config }}"
         continue-on-error: true
         uses: mikepenz/action-junit-report@v3
         if: always()
@@ -194,8 +252,14 @@ jobs:
           detailed_summary: true
           annotate_notice: true
           include_passed: true
-          report_paths: 'results/job*/results*/*.xml'
+          report_paths: '/tmp/results/job*/results*/*.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      # ensure you cleanup everything after every run but only from within
+      # $GITHUB_WORKSPACE ;)
+      - name: Clean up current directory
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf *
 
   xfs_tests:
     needs: build_kernel
