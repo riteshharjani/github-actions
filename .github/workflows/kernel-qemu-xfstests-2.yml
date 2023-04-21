@@ -90,7 +90,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   ext4_tests:
-    needs: check_changes
+    needs: build_kernel
     if: ${{ needs.check_changes.outputs.in_ext4 == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
     runs-on: ubuntu-latest
     strategy:
@@ -112,7 +112,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   xfs_tests:
-    needs: check_changes
+    needs: build_kernel
     if: ${{ needs.check_changes.outputs.in_xfs == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
     runs-on: ubuntu-latest
     strategy:
@@ -134,7 +134,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   btrfs_tests:
-    needs: check_changes
+    needs: build_kernel
     if: ${{ needs.check_changes.outputs.in_btrfs == 'true' || needs.check_changes.outputs.fs_generic == 'true' }}
     runs-on: ubuntu-latest
     strategy:
