@@ -154,9 +154,12 @@ jobs:
           include_passed: true
           report_paths: '/tmp/results/job*/results*/*.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Clean up current directory
-#        run: |
-#          rm -rf *
+      # ensure you cleanup everything after every run but only from within
+      # $GITHUB_WORKSPACE ;)
+      - name: Clean up current directory
+        run: |
+          cd $GITHUB_WORKSPACE
+          rm -rf *
 
   ext4_tests:
     needs: build_kernel

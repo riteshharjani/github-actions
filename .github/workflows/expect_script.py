@@ -8,8 +8,8 @@ if len(sys.argv) != 2:
 
 testpath = sys.argv[1]
 
-print(f"avocado --show test run fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
-sys.exit(0)
+
+print(f"Run test: avocado --show test run fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
 
 #url = 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
 #local_filename = 'focal-server-cloudimg-amd64.img'
