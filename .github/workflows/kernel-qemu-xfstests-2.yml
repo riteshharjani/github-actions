@@ -36,13 +36,10 @@ jobs:
               - 'fs/xfs/**'
             in_btrfs:
               - 'fs/btrfs/**'
-            in_generic:
+            fs_generic:
               - 'fs/**'
               - 'incldue/linux/**'
-              - '!fs/ext4/**'
-              - '!fs/ext2/**'
-              - '!fs/xfs/**'
-              - '!fs/btrfs/**'
+              - '!**'
   build_kernel:
     needs: check_changes
     runs-on: ubuntu-latest
