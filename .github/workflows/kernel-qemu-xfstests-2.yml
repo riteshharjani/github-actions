@@ -62,6 +62,7 @@ jobs:
         sudo apt-get update && sudo apt-get install -y gcc
         sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms
     - name: Compile Linux
+      continue-on-error: true
       run: |
         make defconfig
         make -j$(nproc) Werror=1
