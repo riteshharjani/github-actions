@@ -87,11 +87,13 @@ jobs:
       matrix:
         config: ["ext2_1k", "ext2_4k"]
     steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#        with:
-#          repository: riteshharjani/fsci
-#          ref: master
+      - name: Checkout repository
+        uses: actions/checkout@v2
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#         with:
+#           repository: riteshharjani/fsci
+#           ref: master
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -125,6 +127,7 @@ jobs:
       - name: Run ext2 tests with config ${{ matrix.config }}
         run: |
           echo "Running ext2 tests with config ${{ matrix.config }}"
+          echo $GITHUB_WORKSPACE
           lscpu
           lsmem
           pwd
@@ -151,6 +154,9 @@ jobs:
           include_passed: true
           report_paths: '/tmp/results/job*/results*/*.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Clean up current directory
+#        run: |
+#          rm -rf *
 
   ext4_tests:
     needs: build_kernel
