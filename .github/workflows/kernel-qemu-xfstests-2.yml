@@ -21,7 +21,7 @@ jobs:
       in_ext4: ${{ steps.check_paths.outputs.in_ext4 }}
       in_xfs: ${{ steps.check_paths.outputs.in_xfs }}
       in_btrfs: ${{ steps.check_paths.outputs.in_btrfs }}
-      fs_generic: ${{ steps.check_generic.outputs.fs_generic }}
+      fs_generic: ${{ steps.check_paths.outputs.fs_generic }}
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
