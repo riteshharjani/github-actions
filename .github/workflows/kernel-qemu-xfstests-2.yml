@@ -21,7 +21,7 @@ jobs:
       in_ext4: ${{ steps.check_paths.outputs.in_ext4 }}
       in_xfs: ${{ steps.check_paths.outputs.in_xfs }}
       in_btrfs: ${{ steps.check_paths.outputs.in_btrfs }}
-      fs_generic: ${{ steps.check_paths.outputs.fs_generic }}
+      fs_generic: ${{ steps.set_fs_generic.outputs.fs_generic }}
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
@@ -36,14 +36,20 @@ jobs:
               - 'fs/xfs/**'
             in_btrfs:
               - 'fs/btrfs/**'
-            fs_generic:
-              - '!**'
+            in_fs:
               - 'fs/**'
-              - 'incldue/linux/**'
-              - '!fs/ext2/**'
-              - '!fs/ext4/**'
-              - '!fs/xfs/**'
-              - '!fs/btrfs/**'
+            in_include:
+              - 'include/linux/fs.h'
+      - name: Set fs_generic flag
+        id: set_fs_generic
+        run: |
+          if [[ "${{ steps.check_paths.outputs.in_include }}" == "true" || ("${{ steps.check_paths.outputs.in_fs }}" == "true" && "${{ steps.check_paths.outputs.in_ext2 }}" != "true" && "${{ steps.check_paths.outputs.in_ext4 }}" != "true" && "${{ steps.check_paths.outputs.in_xfs }}" != "true" && "${{ steps.check_paths.outputs.in_btrfs }}" != "true") ]]; then
+            echo "fs_generic=true" >> $GITHUB_ENV
+            echo "::set-output name=fs_generic::true"
+          else
+            echo "fs_generic=false" >> $GITHUB_ENV
+            echo "::set-output name=fs_generic::false"
+          fi
   build_kernel:
     needs: check_changes
     runs-on: ubuntu-latest
