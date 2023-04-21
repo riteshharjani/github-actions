@@ -40,10 +40,10 @@ jobs:
               - '!**'
               - 'fs/**'
               - 'incldue/linux/**'
-#              - '!fs/ext2/**'
-#              - '!fs/ext4/**'
-#              - '!fs/xfs/**'
-#              - '!fs/btrfs/**'
+              - '!fs/ext2/**'
+              - '!fs/ext4/**'
+              - '!fs/xfs/**'
+              - '!fs/btrfs/**'
   build_kernel:
     needs: check_changes
     runs-on: ubuntu-latest
