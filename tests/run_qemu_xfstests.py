@@ -1,6 +1,7 @@
 import pexpect
 import sys
 import re
+import os
 
 if len(sys.argv) != 2:
     print("Usage: python3 expect_script testpath")
@@ -29,6 +30,10 @@ cloud_image_path = './jammy-server-cloudimg-amd64.img'
 
 #                 -device virtio-net,netdev=vmnic \
 #                 -netdev user,id=vmnic,hostfwd=tcp::12125-:22 \
+
+if (not os.path.exists('/tmp/results')):
+    os.mkdir('/tmp/results/')
+
 # Create a pexpect object to run the QEMU command
 qemu_command = f'''qemu-system-x86_64 \
                  -enable-kvm \
@@ -40,7 +45,7 @@ qemu_command = f'''qemu-system-x86_64 \
                  -drive file=user-data.img,format=raw \
                  -monitor telnet:127.0.0.1:55555,server,nowait -serial mon:stdio \
                  -serial telnet:127.0.0.1:1234,server,nowait \
-                 -fsdev local,id=shared_test_dev,path=/tmp,security_model=none \
+                 -fsdev local,id=shared_test_dev,path=/tmp/results,security_model=none \
                  -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared \
 	             -net nic,model=virtio -net user,hostfwd=tcp:127.0.0.1:2001-:22 \
                  -append "console=ttyS0,115200n8 root=/dev/sda1'''
@@ -116,7 +121,7 @@ child.expect('root@ubuntu.*#')
 child.sendline("bash -c 'echo 9 > /proc/sys/kernel/printk'")
 child.expect('root@ubuntu.*#')
 
-child.sendline(f"avocado --show test run fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
+child.sendline(f"avocado --show test run --job-results-dir /root/host_shared/ fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
 child.expect('root@ubuntu.*#')
 
 print(child.before)
