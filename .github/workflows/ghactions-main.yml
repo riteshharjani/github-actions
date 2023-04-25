@@ -4,17 +4,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  run_main:
-    runs-on: ubuntu-latest
+  call-reusable-workflow:
     strategy:
       matrix:
         fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
         config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: reusable
-      uses: riteshharjani/github-actions/.github/workflows/ghactions-reusable.yml@master
-      with:
-        fs_type: ${{ matrix.fs_type }}
-        config: ${{ matrix.config }}
+    uses: riteshharjani/github-actions/.github/workflows/ghactions-reusable.yml@master
+    if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
+              (github.event.inputs.wd_all == 'true' ||
+              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
+              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
+              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
+              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
+            )}}
+    with:
+      fs_type: ${{ matrix.fs_type }}
+      config: ${{ matrix.config }}
