@@ -44,7 +44,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Run test
+    - name: Run test for ${{ matrix.fs_type}} ${{ matrix.config }}
       if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
               (github.event.inputs.wd_all == 'true' ||
               (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
@@ -53,5 +53,5 @@ jobs:
               (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
             )}}
       run: |
-        sudo tests/run_qemu_xfstests.py
+        sudo python3 tests/run_qemu_xfstests.py
 
