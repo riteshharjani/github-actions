@@ -38,15 +38,14 @@ jobs:
       matrix:
         fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
         config: ['1k', '4k', '1k_auto', '4k_auto']
-
     env:
         FS_TYPE: ${{ matrix.fs_type }}
         CONFIG: ${{ matrix.config }}
+    steps:
     if: ${{ (github.event.inputs.wd_all == 'true' &&
             (github.event.inputs.config == 'auto' && endsWith(matrix.config, '_auto')) ||
             (github.event.inputs.config == 'quick' && !endsWith(matrix.config, '_auto')))
           }}
-    steps:
     - name: Run test
       run: |
           echo "Test running for ${{ matrix.fs_type }} with ${{ matrix.config }}"
