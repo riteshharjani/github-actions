@@ -1,0 +1,44 @@
+name: ghactions
+
+on:
+  workflow_dispatch:
+    inputs:
+      wd_all:
+        description: 'Run for all filesystems'
+        required: true
+        default: false
+      wd_ext2:
+        description: 'Run ext2 filesystems'
+        required: true
+        default: false
+      wd_ext4:
+        description: 'Run ext4 filesystems'
+        required: true
+        default: false
+      wd_xfs:
+        description: 'Run xfs filesystems'
+        required: true
+        default: false
+      wd_btrfs:
+        description: 'Run btrfs filesystems'
+        required: true
+        default: false
+
+jobs:
+  ghactions:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
+        config: ['1k', '4k', '1k_auto', '4k_auto']
+
+    env:
+        FS_TYPE: ${{ matrix.fs_type }}
+        CONFIG: ${{ matrix.config }}
+
+    steps:
+    - name: Run test
+      run: |
+          echo "Test running for ${{ matrix.fs_type }} with ${{ matrix.config }}"
+
