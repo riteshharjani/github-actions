@@ -104,6 +104,7 @@ jobs:
       repo: ${{ github.event.inputs.wd_repo }}
       branch: ${{ github.event.inputs.wd_branch }}
   call-reusable-workflow-fstests-ext4:
+    needs: build_kernel
     uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
     if: ${{ github.event.inputs.wd_ext4 == 'true' || github.event.inputs.wd_all == 'true' }}
     with:
