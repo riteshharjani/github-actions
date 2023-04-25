@@ -32,6 +32,6 @@ jobs:
     strategy:
       matrix:
         config: ${{ fromJson(needs.parse_input.outputs.matrix) }}
-     steps:
-     - name: Show matrix value
-       run: echo "Current config value: ${{ matrix.config }}"
+    steps:
+    - name: Show matrix value
+      run: echo "Current config value: ${{ matrix.config }}"
