@@ -39,7 +39,7 @@ on:
 jobs:
   call-reusable-workflow-ext4:
     uses: riteshharjani/github-actions/.github/workflows/ghactions-reusable.yml@master
-    if: ${{ github.event.inputs.wd_ext2 == 'true' || github.input.inputs.wd_all == 'true' }}
+    if: ${{ github.event.inputs.wd_ext4 == 'true' || github.input.inputs.wd_all == 'true' }}
     with:
       fs_type: "ext4"
       config: ${{ github.event.inputs.config }}
