@@ -48,7 +48,7 @@ jobs:
               (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
               (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
               (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
-              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true') ||
+              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
             )}}
       uses: ./.github/workflows/ghactions-reusable.yml
       with:
