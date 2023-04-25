@@ -49,7 +49,7 @@ jobs:
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
       uses: actions/checkout@v3
       with:
-        repo: ${{ github.event.inputs.wd_repo }}
+        repository: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
     - name: Install dependencies
       run: |
