@@ -74,7 +74,19 @@ jobs:
           arch/x86/boot/.config
           System.map
           vmlinux
-  call-fstests-ext4:
+  fstests-ext2:
+    needs: build_kernel
+    strategy:
+      matrix:
+        configs: ${{ fromJson(inputs.wd_configs) }}
+    uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
+    if: ${{ github.event.inputs.wd_ext2 == 'true' || github.event.inputs.wd_all == 'true' }}
+    with:
+      fs_type: "ext2"
+      config: ${{ matrix.configs }}
+      repo: ${{ github.event.inputs.wd_repo }}
+      branch: ${{ github.event.inputs.wd_branch }}
+  fstests-ext4:
     needs: build_kernel
     strategy:
       matrix:
@@ -83,6 +95,30 @@ jobs:
     if: ${{ github.event.inputs.wd_ext4 == 'true' || github.event.inputs.wd_all == 'true' }}
     with:
       fs_type: "ext4"
+      config: ${{ matrix.configs }}
+      repo: ${{ github.event.inputs.wd_repo }}
+      branch: ${{ github.event.inputs.wd_branch }}
+  fstests-xfs:
+    needs: build_kernel
+    strategy:
+      matrix:
+        configs: ${{ fromJson(inputs.wd_configs) }}
+    uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
+    if: ${{ github.event.inputs.wd_xfs == 'true' || github.event.inputs.wd_all == 'true' }}
+    with:
+      fs_type: "xfs"
+      config: ${{ matrix.configs }}
+      repo: ${{ github.event.inputs.wd_repo }}
+      branch: ${{ github.event.inputs.wd_branch }}
+  fstests-btrfs:
+    needs: build_kernel
+    strategy:
+      matrix:
+        configs: ${{ fromJson(inputs.wd_configs) }}
+    uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
+    if: ${{ github.event.inputs.wd_btrfs == 'true' || github.event.inputs.wd_all == 'true' }}
+    with:
+      fs_type: "btrfs"
       config: ${{ matrix.configs }}
       repo: ${{ github.event.inputs.wd_repo }}
       branch: ${{ github.event.inputs.wd_branch }}
