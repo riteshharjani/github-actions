@@ -122,7 +122,7 @@ child.expect('root@ubuntu.*#')
 child.sendline("bash -c 'echo 9 > /proc/sys/kernel/printk'")
 child.expect('root@ubuntu.*#')
 
-child.sendline(f"avocado --show test run --job-results-dir /root/host_shared/ fs/xfstests.py -m {TESTPATH} --max-parallel-tasks 1")
+child.sendline(f"avocado --show test run --job-results-dir /root/host_shared/ fs/xfstests.py -m {TESTPATH}.yaml --max-parallel-tasks 1")
 child.expect('root@ubuntu.*#')
 
 print(child.before)
