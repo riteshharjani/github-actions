@@ -1,0 +1,108 @@
+name: ghactions xfstests
+
+on:
+  workflow_call:
+    inputs:
+      fs_type:
+        description: 'Filesystem type'
+        required: true
+        type: string
+      config:
+        description: "1k_quick or 4k_quick or 1k_auto or 4k_auto"
+        required: true
+        type: string
+      repo:
+        description: "repo details"
+        required: true
+        type: string
+      branch:
+        description: "repo branch"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  checks: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  ghactions:
+    runs-on: self-hosted
+    steps:
+      # ensure you start clean
+    - name: Clean up github workspace
+      run: |
+        cd $GITHUB_WORKSPACE
+        rm -rf *
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: kernel_artifacts
+    - name: Install dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+        gcc \
+        python3 python3-pip \
+        qemu-system-x86 \
+        qemu-utils cloud-image-utils gzip
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Install pip packages
+      run: |
+        sudo pip3 install pexpect
+        sudo pip3 install gdown
+    - name: Cloud-init image
+      run: |
+        sudo cloud-localds user-data.img user-data.yaml
+    # Download from self hosted
+    - name: Download Ubuntu cloud image
+      run: |
+        cp /opt/jammy-server-cloudimg-amd64.img.gz .
+        #sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
+        gzip -d jammy-server-cloudimg-amd64.img.gz
+        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
+    - name: Cleanup results directory
+      continue-on-error: true
+      run: |
+        rm -rf /tmp/results/
+        mkdir /tmp/results
+    - name: Run tests with config
+      run: |
+        echo "Running ${{ inputs.fs_type }} tests with config ${{ inputs.config }}"
+        echo $GITHUB_WORKSPACE
+        lscpu
+        lsmem
+        pwd
+        ls
+        mount
+        df -h
+        cat tests/run_qemu_xfstests.py
+        sudo FS_TYPE=$FS_TYPE CONFIG=$CONFIG python3 tests/run_qemu_xfstests.py
+        sudo chown -R $USER:$USER /tmp/results
+        sudo ls -al /tmp/results/
+    - name: Upload test results for ${{ inputs.fs_type }}-${{ inputs.config }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: "xfstests_artifacts_${{ inputs.fs_type }}_${{ inputs.config }}"
+        path: /tmp/results/
+    - name: "Publish results for $${{ inputs.fs_type}}_${{ inputs.config }}"
+      continue-on-error: true
+      uses: mikepenz/action-junit-report@v3
+      with:
+        commit: ${{ github.sha }}
+        detailed_summary: true
+        annotate_notice: true
+        include_passed: true
+        report_paths: '/tmp/results/**/*.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    # ensure you cleanup everything after every run but only from within
+    # $GITHUB_WORKSPACE ;)
+    - name: Clean up current directory
+      run: |
+        cd $GITHUB_WORKSPACE
+        rm -rf *
