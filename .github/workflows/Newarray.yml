@@ -1,37 +1,59 @@
-name: Matrix from Input2
+name: Matrix from input_3
 
 on:
+
   workflow_dispatch:
+
     inputs:
-      configValues:
-        description: 'Comma-separated configuration values'
+
+      configs:
+
+        description: 'Comma-separated list of configs'
+
         required: true
+
         default: '1k,4k'
 
 jobs:
-  parse_input:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Install jq
-        run: sudo apt-get install jq
 
-      - name: Set Matrix
+  parse_input:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Install jq
+
+        run: sudo apt-get install -y jq
+
+      - name: Parse input and set matrix
+
         id: set-matrix
+
         run: |
-          INPUT_CONFIGS=${{ github.event.inputs.configValues }}
+
+          INPUT_CONFIGS=${{ github.event.inputs.configs }}
+
           IFS=',' read -ra CONFIG_ARRAY <<< "$INPUT_CONFIGS"
+
           CONFIG_JSON=$(echo "${CONFIG_ARRAY[@]}" | jq -R 'split(" ")' | jq -sc .)
-          echo "MATRIX=${CONFIG_JSON}" >> $GITHUB_ENV
-          echo "::set-output name=matrix::${CONFIG_JSON}"
+
+          echo "CONFIG_JSON=$CONFIG_JSON" >> $GITHUB_ENV
 
   use_matrix:
+
     needs: parse_input
+
     runs-on: ubuntu-latest
+
     strategy:
+
       matrix:
-        config: ${{ fromJson(needs.parse_input.outputs.matrix) }}
+
+        config: ${{fromJson(env.CONFIG_JSON)}}
+
     steps:
+
       - name: Show matrix value
+
         run: echo "Current config value ${{ matrix.config }}"
