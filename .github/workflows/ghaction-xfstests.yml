@@ -137,9 +137,6 @@ jobs:
       if: ${{ env.IS_SKIPPED == 'false' }}
       run: |
         sudo cloud-localds user-data.img user-data.yaml
-#     - name: Create dummy qcow image
-#       run: |
-#         qemu-img create -f qcow2 jammy-server-cloudimg-amd64.img 20G
     # Download from self hosted
     - name: Download Ubuntu cloud image
       if: ${{ env.IS_SKIPPED == 'false' }}
@@ -182,7 +179,7 @@ jobs:
       with:
         commit: ${{ github.sha }}
         detailed_summary: true
-        #annotate_notice: true
+        annotate_notice: true
         include_passed: true
         report_paths: '/tmp/results/**/*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -193,32 +190,3 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         rm -rf *
-#    steps:
-#    - name: Set environment IS_SKIPPED
-#      id: set_variable
-#      run: |
-#        if (${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
-#              (github.event.inputs.wd_all == 'true' ||
-#              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
-#              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
-#              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
-#              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
-#            )}}); then
-#            echo 'IS_SKIPPED=true' >> $GITHUB_ENV
-#        else
-#            echo 'IS_SKIPPED=false' >> $GITHUB_ENV
-#        fi
-#    - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
-#      if: ${{ env.IS_SKIPPED == 'true' }}
-#      uses: actions/checkout@v3
-#      with:
-#        repo: ${{ github.event.inputs.wd_repo }}
-#        ref:  ${{ github.event.inputs.wd_branch }}
-#    - name: Checkout this repository
-#      if: ${{ env.IS_SKIPPED == 'true' }}
-#      uses: actions/checkout@v3
-#    - name: Run test for ${{ matrix.fs_type}} ${{ matrix.config }}
-#      if: ${{ env.IS_SKIPPED == 'true' }}
-#      run: |
-#        sudo FS_TYPE=$FS_TYPE CONFIG=$CONFIG python3 tests/run_qemu_xfstests.py
-
