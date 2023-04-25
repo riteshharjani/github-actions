@@ -173,7 +173,6 @@ jobs:
       if: ${{ env.IS_SKIPPED == 'false' }}
       continue-on-error: true
       uses: mikepenz/action-junit-report@v3
-      if: always()
       with:
         commit: ${{ github.sha }}
         detailed_summary: true
