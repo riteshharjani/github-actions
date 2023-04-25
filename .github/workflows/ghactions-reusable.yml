@@ -17,6 +17,6 @@ jobs:
   run_tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Display fs_type
-        run: |
-          echo "Running tests for ${{ inputs.fs_type }} for ${{ inputs.config }} "
+    - name: Display fs_type
+      run: |
+        echo "Running tests for ${{ inputs.fs_type }} for ${{ inputs.config }} "
