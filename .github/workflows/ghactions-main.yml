@@ -1,0 +1,19 @@
+name: main-reusable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run_main:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
+        config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
+    steps:
+    - name: reusable
+      uses: riteshharjani/github-actions/.github/workflows/ghactoins-reusable.yml@master
+      with:
+        fs_type: ${{ matrix.fs_type }}
+        config: ${{ matrix.config }}
+
