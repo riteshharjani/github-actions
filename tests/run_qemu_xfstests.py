@@ -12,7 +12,6 @@ if (CONFIG == None or FS_TYPE == None):
     exit(1);
 
 print(f"environ: FS: {FS_TYPE} with CONFIG: {CONFIG}, TESTPATH: {TESTPATH}")
-exit(0);
 
 #url = 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
 #local_filename = 'focal-server-cloudimg-amd64.img'
