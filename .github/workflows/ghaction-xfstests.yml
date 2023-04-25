@@ -47,13 +47,13 @@ jobs:
         CONFIG: ${{ matrix.config }}
 
     steps:
-    if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
-            (github.event.inputs.wd_all == 'true' ||
-            (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
-            (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
-            (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
-            (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
-          )}}
+      if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
+              (github.event.inputs.wd_all == 'true' ||
+              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
+              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
+              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
+              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
+            )}}
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Run test for ${{ matrix.fs_type}} ${{ matrix.config }}
