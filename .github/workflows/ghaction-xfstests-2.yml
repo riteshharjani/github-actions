@@ -94,7 +94,7 @@ jobs:
       with:
         name: "xfstests_artifacts_${{ inputs.fs_type }}_${{ inputs.config }}"
         path: /tmp/results/
-    - name: "Publish results for $${{ inputs.fs_type}}_${{ inputs.config }}"
+    - name: "Publish results for ${{ inputs.fs_type}}_${{ inputs.config }}"
       continue-on-error: true
       uses: mikepenz/action-junit-report@v3
       with:
