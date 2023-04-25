@@ -28,25 +28,24 @@ on:
         required: true
         default: 'quick'
 
-
+# Define a reusable job template
+jobs:
+  ext_job_template:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run script
+      run: |
+          echo "running ext_job_template for ${{ env.FS_TYPE }} with ${{ matrix.config }} "
 
 jobs:
-  ghactions:
+  ext2:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
-        config: ['1k', '4k', '1k_auto', '4k_auto']
+        config: ['1k', '4k']
     env:
-        FS_TYPE: ${{ matrix.fs_type }}
-        CONFIG: ${{ matrix.config }}
+      FS_TYPE: 'ext2'
     steps:
-      if: ${{ (github.event.inputs.wd_all == 'true' &&
-              (github.event.inputs.config == 'auto' && endsWith(matrix.config, '_auto')) ||
-              (github.event.inputs.config == 'quick' && !endsWith(matrix.config, '_auto')))
-            }}
     - name: Run test
-      run: |
-          echo "Test running for ${{ matrix.fs_type }} with ${{ matrix.config }}"
+      job: ext_job_template
 
