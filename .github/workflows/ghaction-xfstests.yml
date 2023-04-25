@@ -1,4 +1,4 @@
-name: ghactions
+name: ghactions xfstests
 
 on:
   workflow_dispatch:
