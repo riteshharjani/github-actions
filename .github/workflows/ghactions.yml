@@ -53,5 +53,5 @@ jobs:
               (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
             )}}
       run: |
-        tests/run_qemu_xfstests.py
+        sudo tests/run_qemu_xfstests.py
 
