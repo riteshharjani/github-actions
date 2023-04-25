@@ -14,7 +14,7 @@ on:
       wd_ext4:
         description: 'Run ext4 filesystems'
         required: true
-        default: false
+        default: true
       wd_xfs:
         description: 'Run xfs filesystems'
         required: true
@@ -36,7 +36,44 @@ on:
         required: true
         default: 'master'
 
+permissions:
+  contents: read
+  checks: write
+  id-token: write
+  pull-requests: write
+
 jobs:
+#  build_kernel:
+#    runs-on: ubuntu-latest
+#    runs-on: self-hosted
+#    steps:
+#    - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
+#      run: echo "checkout repo ${{ github.event.inputs.wd_repo }}"
+#      uses: actions/checkout@v3
+#      with:
+#        repo: ${{ github.event.inputs.wd_repo }}
+#        ref:  ${{ github.event.inputs.wd_branch }}
+#    - name: Install dependencies
+#      run: |
+#        sudo apt-get update && sudo apt-get install -y gcc
+#        sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms ccache
+#    - name: Compile Linux
+#      run: |
+#        make defconfig
+#        # by default x86_64_defconfig does not have many FS options enabled.
+#        wget https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1 -O myconfig
+#        cat myconfig >> .config
+#        make olddefconfig
+#        make CC="ccache gcc" -j$(nproc) Werror=1
+#    - name: Upload artifacts
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: kernel_artifacts
+#        path: |
+#          arch/x86/boot/bzImage
+#          arch/x86/boot/.config
+#          System.map
+#          vmlinux
   ghactions:
     runs-on: ubuntu-latest
 
