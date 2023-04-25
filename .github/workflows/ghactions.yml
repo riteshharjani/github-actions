@@ -39,8 +39,8 @@ jobs:
 
     steps:
     - name: Run test
-      if: ${{ github.event.inputs.wd_all ||
-              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2) }}
+      if: ${{ github.event.inputs.wd_all == 'true' ||
+              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') }}
       run: |
           echo "Test running for ${{ matrix.fs_type }} with ${{ matrix.config }}"
 
