@@ -1,0 +1,62 @@
+name: ghactions
+
+on:
+  workflow_dispatch:
+    inputs:
+      wd_all:
+        description: 'Run for all filesystems'
+        required: true
+        default: false
+      wd_ext2:
+        description: 'Run ext2 filesystems'
+        required: true
+        default: false
+      wd_ext4:
+        description: 'Run ext4 filesystems'
+        required: true
+        default: false
+      wd_xfs:
+        description: 'Run xfs filesystems'
+        required: true
+        default: false
+      wd_btrfs:
+        description: 'Run btrfs filesystems'
+        required: true
+        default: false
+      wd_config:
+        description: 'quick or auto'
+        required: true
+        default: 'quick'
+      wd_repo:
+        description: 'linux repo and branch to run'
+        required: true
+        default: 'riteshharjani/linux'
+        ref: 'master'
+
+jobs:
+  ghactions:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
+        config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
+
+    env:
+        FS_TYPE: ${{ matrix.fs_type }}
+        CONFIG: ${{ matrix.config }}
+
+    steps:
+    if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
+            (github.event.inputs.wd_all == 'true' ||
+            (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
+            (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
+            (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
+            (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
+          )}}
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Run test for ${{ matrix.fs_type}} ${{ matrix.config }}
+      run: |
+        sudo FS_TYPE=$FS_TYPE CONFIG=$CONFIG python3 tests/run_qemu_xfstests.py
+
