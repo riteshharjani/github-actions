@@ -29,10 +29,6 @@ on:
         description: 'Run btrfs filesystems'
         required: true
         default: false
-      wd_config:
-        description: 'quick or auto'
-        required: true
-        default: 'quick'
       wd_repo:
         description: 'linux repo and branch to run'
         required: true
@@ -41,6 +37,11 @@ on:
         description: 'linux branch for this repo'
         required: true
         default: 'master'
+      wd_configs:
+        description: "'1k_quick', '1k_auto', comma seperated array configs"
+        required: true
+        default: "['1k_auto', '4k_auto']"
+
 
 jobs:
   build_kernel:
@@ -105,11 +106,14 @@ jobs:
       branch: ${{ github.event.inputs.wd_branch }}
   call-reusable-workflow-fstests-ext4:
     needs: build_kernel
+    strategy:
+      matrix:
+        configs: ${{ fromJson(inputs.configs) }}
     uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
     if: ${{ github.event.inputs.wd_ext4 == 'true' || github.event.inputs.wd_all == 'true' }}
     with:
       fs_type: "ext4"
-      config: ${{ github.event.inputs.config }}
+      config: ${{ matrix.configs }}
       repo: ${{ github.event.inputs.wd_repo }}
       branch: ${{ github.event.inputs.wd_branch }}
 
