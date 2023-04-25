@@ -2,50 +2,55 @@ name: ghactions
 
 on:
   workflow_dispatch:
+    inputs:
+      wd_all:
+        description: 'Run for all filesystems'
+        required: true
+        default: false
+      wd_ext2:
+        description: 'Run ext2 filesystems'
+        required: true
+        default: false
+      wd_ext4:
+        description: 'Run ext4 filesystems'
+        required: true
+        default: false
+      wd_xfs:
+        description: 'Run xfs filesystems'
+        required: true
+        default: false
+      wd_btrfs:
+        description: 'Run btrfs filesystems'
+        required: true
+        default: false
+      wd_config:
+        description: 'quick or auto'
+        required: true
+        default: 'quick'
 
-# Define a reusable job template
 jobs:
-  ext_job_template:
+  ghactions:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Run script
-      run: |
-        echo "FS_TYPE=${{ env.FS_TYPE }}"
 
-# Define jobs that use the job template
-jobs:
-  ext2:
-    runs-on: ubuntu-latest
-    needs: [input_event]
-    steps:
-    - name: Execute ext2
-      env:
-        FS_TYPE: ext2
-      job: ext_job_template
-  ext4:
-    runs-on: ubuntu-latest
-    needs: [input_event]
-    steps:
-    - name: Execute ext4
-      env:
-        FS_TYPE: ext4
-      job: ext_job_template
+    strategy:
+      matrix:
+        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
+        config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
 
-# Define the input_event job
-jobs:
-  input_event:
-    runs-on: ubuntu-latest
-    outputs:
-      input_data: ${{ steps.input_data.outputs.data }}
+    env:
+        FS_TYPE: ${{ matrix.fs_type }}
+        CONFIG: ${{ matrix.config }}
+
     steps:
-    - name: Generate input data
-      id: input_data
-      run: |
-        echo "data=example_data" > input_data.txt
-    - name: Upload input data
-      uses: actions/upload-artifact@v2
+    - name: Run test
+      if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
+              (github.event.inputs.wd_all == 'true' ||
+              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
+              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
+              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
+              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true') ||
+            )}}
+      uses: ./.github/workflows/ghactions-reusable.yml
       with:
-        name: input_data
-        path: input_data.txt
+        fs_type: ${{ matrix.fs_type }}
+        config: ${{ matrix.config }}

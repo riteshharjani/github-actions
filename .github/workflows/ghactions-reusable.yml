@@ -1,0 +1,22 @@
+# .github/workflows/reusable-workflow.yml
+name: Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      fs_type:
+        description: 'Filesystem type'
+        required: true
+        type: string
+      config:
+        description: "1k_quick or 4k_quick or 1k_auto or 4k_auto"
+        required: true
+        type: string
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display fs_type
+        run: |
+          echo "Running tests for ${{ inputs.fs_type }} for ${{ inputs.config }} "
