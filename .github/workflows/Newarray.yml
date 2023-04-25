@@ -27,7 +27,7 @@ jobs:
 
       matrix:
 
-        config: ${{fromJson(inputs.config)}}
+        config: ${{ fromJson(inputs.configs) }}
 
     steps:
 
