@@ -31,7 +31,10 @@ on:
         description: 'linux repo and branch to run'
         required: true
         default: 'riteshharjani/linux'
-        ref: 'master'
+      wd_branch:
+        description: 'linux branch for this repo'
+        required: true
+        default: 'master'
 
 jobs:
   ghactions:
@@ -47,7 +50,18 @@ jobs:
         CONFIG: ${{ matrix.config }}
 
     steps:
-    - name: Checkout repository
+    - name: Checkout ${{ github.event.inputs.wd_repo }}@${{ github.event.inputs.wd_branch }} repository
+      if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
+              (github.event.inputs.wd_all == 'true' ||
+              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
+              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
+              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
+              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
+            )}}
+      uses: actions/checkout@v3
+        repo: ${{ github.event.inputs.wd_repo }}
+        ref:  ${{ github.event.inputs.wd_branch }}
+    - name: Checkout this repository
       if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
               (github.event.inputs.wd_all == 'true' ||
               (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
