@@ -30,7 +30,7 @@ on:
       wd_repo:
         description: 'linux repo and branch to run'
         required: true
-        default: 'riteshharjani/linux'
+        default: 'torvalds/linux'
       wd_branch:
         description: 'linux branch for this repo'
         required: true
