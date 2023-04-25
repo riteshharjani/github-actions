@@ -5,7 +5,7 @@ import os
 
 CONFIG = os.environ.get('CONFIG')
 FS_TYPE = os.environ.get('FS_TYPE')
-TESTPATH = f"fs/xfstests.py.data/{fs_type}/{config}"
+TESTPATH = f"fs/xfstests.py.data/{FS_TYPE}/{CONFIG}"
 
 if (CONFIG == None or FS_TYPE == None):
     print(f"Usage: sudo FS_TYPE={FS_TYPE} CONFIG={CONFIG} python3 tests/run_qemu_xfstests.py")
