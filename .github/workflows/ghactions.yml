@@ -52,6 +52,6 @@ jobs:
               (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
               (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
             )}}
-      runs: |
+      run: |
         tests/run_qemu_xfstests.py
 
