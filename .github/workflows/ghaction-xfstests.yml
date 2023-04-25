@@ -102,7 +102,7 @@ jobs:
             echo 'IS_SKIPPED=false' >> $GITHUB_ENV
         fi
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
-      if: ${{ env.IS_SKIPPED }}
+      if: ${{ env.IS_SKIPPED == 'true' }}
       uses: actions/checkout@v3
       with:
         repo: ${{ github.event.inputs.wd_repo }}
