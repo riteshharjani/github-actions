@@ -73,120 +73,120 @@ jobs:
           arch/x86/boot/.config
           System.map
           vmlinux
-          #  ghactions:
-          #    needs: build_kernel
-          #    runs-on: self-hosted
-          #
-          #    strategy:
-          #      matrix:
-          #        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
-          #        config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
-          #
-          #    env:
-          #        FS_TYPE: ${{ matrix.fs_type }}
-          #        CONFIG: ${{ matrix.config }}
-          #
-          #    steps:
-          #    - name: Set environment IS_SKIPPED
-          #      id: set_variable
-          #      run: |
-          #        if (${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
-          #              (github.event.inputs.wd_all == 'true' ||
-          #              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
-          #              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
-          #              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
-          #              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
-          #            )}}); then
-          #            echo 'IS_SKIPPED=false' >> $GITHUB_ENV
-          #        else
-          #            echo 'IS_SKIPPED=true' >> $GITHUB_ENV
-          #        fi
-          #      # ensure you start clean
-          #    - name: Clean up github workspace
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        cd $GITHUB_WORKSPACE
-          #        rm -rf *
-          #    - name: Checkout repository
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      uses: actions/checkout@v3
-          #    - name: Download artifacts
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      uses: actions/download-artifact@v3
-          #      with:
-          #        name: kernel_artifacts
-          #    - name: Install dependencies
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        sudo apt-get update && sudo apt-get install -y \
-          #        gcc \
-          #        python3 python3-pip \
-          #        qemu-system-x86 \
-          #        qemu-utils cloud-image-utils gzip
-          #    - name: Set up Python 3.x
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      uses: actions/setup-python@v3
-          #      with:
-          #        python-version: '3.x'
-          #    - name: Install pip packages
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        sudo pip3 install pexpect
-          #        sudo pip3 install gdown
-          #    - name: Cloud-init image
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        sudo cloud-localds user-data.img user-data.yaml
-          #    # Download from self hosted
-          #    - name: Download Ubuntu cloud image
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        cp /opt/jammy-server-cloudimg-amd64.img.gz .
-          #        #sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
-          #        gzip -d jammy-server-cloudimg-amd64.img.gz
-          #        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
-          #    - name: Cleanup results directory
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      continue-on-error: true
-          #      run: |
-          #        rm -rf /tmp/results/
-          #        mkdir /tmp/results
-          #    - name: Run ${{ github.job }} tests with config ${{ matrix.config }}
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        echo "Running ${{ github.job }} tests with config ${{ matrix.config }}"
-          #        echo $GITHUB_WORKSPACE
-          #        lscpu
-          #        lsmem
-          #        pwd
-          #        ls
-          #        mount
-          #        df -h
-          #        cat tests/run_qemu_xfstests.py
-          #        sudo FS_TYPE=$FS_TYPE CONFIG=$CONFIG python3 tests/run_qemu_xfstests.py
-          #        sudo chown -R $USER:$USER /tmp/results
-          #        sudo ls -al /tmp/results/
-          #    - name: Upload test results for ${{ github.job }}-${{ matrix.config }}
-          #      uses: actions/upload-artifact@v3
-          #      with:
-          #        name: xfstests_artifacts_$FS_TYPE_${{ matrix.config }}
-          #        path: /tmp/results/
-          #    - name: Publish results for $env.FS_TYPE-${{ matrix.config }}
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      continue-on-error: true
-          #      uses: mikepenz/action-junit-report@v3
-          #      if: always()
-          #      with:
-          #        commit: ${{ github.sha }}
-          #        detailed_summary: true
-          #        annotate_notice: true
-          #        include_passed: true
-          #        report_paths: '/tmp/results/**/*.xml'
-          #        github_token: ${{ secrets.GITHUB_TOKEN }}
-          #    # ensure you cleanup everything after every run but only from within
-          #    # $GITHUB_WORKSPACE ;)
-          #    - name: Clean up current directory
-          #      if: ${{ env.IS_SKIPPED == 'false' }}
-          #      run: |
-          #        cd $GITHUB_WORKSPACE
-          #        rm -rf *
+#  ghactions:
+#    needs: build_kernel
+#    runs-on: self-hosted
+#
+#    strategy:
+#      matrix:
+#        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
+#        config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
+#
+#    env:
+#        FS_TYPE: ${{ matrix.fs_type }}
+#        CONFIG: ${{ matrix.config }}
+#
+#    steps:
+#    - name: Set environment IS_SKIPPED
+#      id: set_variable
+#      run: |
+#        if (${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
+#              (github.event.inputs.wd_all == 'true' ||
+#              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
+#              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
+#              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
+#              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
+#            )}}); then
+#            echo 'IS_SKIPPED=false' >> $GITHUB_ENV
+#        else
+#            echo 'IS_SKIPPED=true' >> $GITHUB_ENV
+#        fi
+#      # ensure you start clean
+#    - name: Clean up github workspace
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        cd $GITHUB_WORKSPACE
+#        rm -rf *
+#    - name: Checkout repository
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      uses: actions/checkout@v3
+#    - name: Download artifacts
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: kernel_artifacts
+#    - name: Install dependencies
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        sudo apt-get update && sudo apt-get install -y \
+#        gcc \
+#        python3 python3-pip \
+#        qemu-system-x86 \
+#        qemu-utils cloud-image-utils gzip
+#    - name: Set up Python 3.x
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      uses: actions/setup-python@v3
+#      with:
+#        python-version: '3.x'
+#    - name: Install pip packages
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        sudo pip3 install pexpect
+#        sudo pip3 install gdown
+#    - name: Cloud-init image
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        sudo cloud-localds user-data.img user-data.yaml
+#    # Download from self hosted
+#    - name: Download Ubuntu cloud image
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        cp /opt/jammy-server-cloudimg-amd64.img.gz .
+#        #sudo gdown https://drive.google.com/uc?id=1KtYJxM_Z5sio1mIPEe-szS3IGu56VyML
+#        gzip -d jammy-server-cloudimg-amd64.img.gz
+#        sudo qemu-img resize jammy-server-cloudimg-amd64.img +20G
+#    - name: Cleanup results directory
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      continue-on-error: true
+#      run: |
+#        rm -rf /tmp/results/
+#        mkdir /tmp/results
+#    - name: Run ${{ github.job }} tests with config ${{ matrix.config }}
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        echo "Running ${{ github.job }} tests with config ${{ matrix.config }}"
+#        echo $GITHUB_WORKSPACE
+#        lscpu
+#        lsmem
+#        pwd
+#        ls
+#        mount
+#        df -h
+#        cat tests/run_qemu_xfstests.py
+#        sudo FS_TYPE=$FS_TYPE CONFIG=$CONFIG python3 tests/run_qemu_xfstests.py
+#        sudo chown -R $USER:$USER /tmp/results
+#        sudo ls -al /tmp/results/
+#    - name: Upload test results for ${{ github.job }}-${{ matrix.config }}
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: xfstests_artifacts_$FS_TYPE_${{ matrix.config }}
+#        path: /tmp/results/
+#    - name: Publish results for $env.FS_TYPE-${{ matrix.config }}
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      continue-on-error: true
+#      uses: mikepenz/action-junit-report@v3
+#      if: always()
+#      with:
+#        commit: ${{ github.sha }}
+#        detailed_summary: true
+#        annotate_notice: true
+#        include_passed: true
+#        report_paths: '/tmp/results/**/*.xml'
+#        github_token: ${{ secrets.GITHUB_TOKEN }}
+#    # ensure you cleanup everything after every run but only from within
+#    # $GITHUB_WORKSPACE ;)
+#    - name: Clean up current directory
+#      if: ${{ env.IS_SKIPPED == 'false' }}
+#      run: |
+#        cd $GITHUB_WORKSPACE
+#        rm -rf *
