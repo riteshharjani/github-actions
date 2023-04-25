@@ -16,33 +16,10 @@ on:
 
 jobs:
 
-  parse_input:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Install jq
-
-        run: sudo apt-get install -y jq
-
-      - name: Parse input and set matrix
-
-        id: set-matrix
-
-        run: |
-
-          INPUT_CONFIGS=${{ github.event.inputs.configs }}
-
-          IFS=',' read -ra CONFIG_ARRAY <<< "$INPUT_CONFIGS"
-
-          CONFIG_JSON=$(echo "${CONFIG_ARRAY[@]}" | jq -R 'split(" ")' | jq -sc .)
-
-          echo "CONFIG_JSON=$CONFIG_JSON" >> $GITHUB_ENV
 
   use_matrix:
 
-    needs: parse_input
+
 
     runs-on: ubuntu-latest
 
