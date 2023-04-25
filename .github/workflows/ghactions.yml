@@ -48,11 +48,6 @@ jobs:
       if: ${{ (github.event.inputs.wd_all == 'true' &&
               (github.event.inputs.config == 'auto' && endsWith(matrix.config, '_auto')) ||
               (github.event.inputs.config == 'quick' && !endsWith(matrix.config, '_auto')))
-              #              ||
-              #              ((matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
-              #              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
-              #              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
-              #              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true'))
             }}
       run: |
           echo "Test running for ${{ matrix.fs_type }} with ${{ matrix.config }}"
