@@ -2,21 +2,44 @@ name: main-reusable
 
 on:
   workflow_dispatch:
+    inputs:
+      wd_all:
+        description: 'Run for all filesystems'
+        required: true
+        default: false
+      wd_ext2:
+        description: 'Run ext2 filesystems'
+        required: true
+        default: false
+      wd_ext4:
+        description: 'Run ext4 filesystems'
+        required: true
+        default: true
+      wd_xfs:
+        description: 'Run xfs filesystems'
+        required: true
+        default: false
+      wd_btrfs:
+        description: 'Run btrfs filesystems'
+        required: true
+        default: false
+      wd_config:
+        description: 'quick or auto'
+        required: true
+        default: 'quick'
+      wd_repo:
+        description: 'linux repo and branch to run'
+        required: true
+        default: 'riteshharjani/linux'
+      wd_branch:
+        description: 'linux branch for this repo'
+        required: true
+        default: 'master'
 
 jobs:
-  call-reusable-workflow:
-    strategy:
-      matrix:
-        fs_type: ['ext2', 'ext4', 'xfs', 'btrfs']
-        config: ['1k_quick', '4k_quick', '1k_auto', '4k_auto']
+  call-reusable-workflow-ext4:
     uses: riteshharjani/github-actions/.github/workflows/ghactions-reusable.yml@master
-    if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
-              (github.event.inputs.wd_all == 'true' ||
-              (matrix.fs_type == 'ext2' && github.event.inputs.wd_ext2 == 'true') ||
-              (matrix.fs_type == 'ext4' && github.event.inputs.wd_ext4 == 'true') ||
-              (matrix.fs_type == 'xfs' && github.event.inputs.wd_xfs == 'true') ||
-              (matrix.fs_type == 'btrfs' && github.event.inputs.wd_btrfs == 'true')
-            )}}
+    if: ${{ github.event.inputs.wd_ext2 == 'true' || github.input.inputs.wd_all == 'true' }}
     with:
-      fs_type: ${{ matrix.fs_type }}
-      config: ${{ matrix.config }}
+      fs_type: "ext4"
+      config: ${{ github.event.inputs.config }}
