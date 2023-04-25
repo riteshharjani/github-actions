@@ -12,7 +12,7 @@ on:
 
         required: true
 
-        default: '1k,4k'
+        default: "['1k', '4k']"
 
 jobs:
 
@@ -50,7 +50,7 @@ jobs:
 
       matrix:
 
-        config: ${{fromJson(env.CONFIG_JSON)}}
+        config: ${{fromJson(inputs.config)}}
 
     steps:
 
