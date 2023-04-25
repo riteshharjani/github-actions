@@ -42,6 +42,8 @@ jobs:
         CONFIG: ${{ matrix.config }}
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
     - name: Run test
       if: ${{ endsWith(matrix.config, github.event.inputs.wd_config) &&
               (github.event.inputs.wd_all == 'true' ||
