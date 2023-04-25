@@ -2,50 +2,50 @@ name: ghactions
 
 on:
   workflow_dispatch:
-    inputs:
-      wd_all:
-        description: 'Run for all filesystems'
-        required: true
-        default: false
-      wd_ext2:
-        description: 'Run ext2 filesystems'
-        required: true
-        default: false
-      wd_ext4:
-        description: 'Run ext4 filesystems'
-        required: true
-        default: false
-      wd_xfs:
-        description: 'Run xfs filesystems'
-        required: true
-        default: false
-      wd_btrfs:
-        description: 'Run btrfs filesystems'
-        required: true
-        default: false
-      config:
-        description: 'auto or quick (default quick)'
-        required: true
-        default: 'quick'
 
 # Define a reusable job template
 jobs:
   ext_job_template:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: Run script
       run: |
-          echo "running ext_job_template for ${{ env.FS_TYPE }} with ${{ matrix.config }} "
+        echo "FS_TYPE=${{ env.FS_TYPE }}"
 
+# Define jobs that use the job template
 jobs:
   ext2:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        config: ['1k', '4k']
-    env:
-      FS_TYPE: 'ext2'
+    needs: [input_event]
     steps:
-    - name: Run test
+    - name: Execute ext2
+      env:
+        FS_TYPE: ext2
+      job: ext_job_template
+  ext4:
+    runs-on: ubuntu-latest
+    needs: [input_event]
+    steps:
+    - name: Execute ext4
+      env:
+        FS_TYPE: ext4
       job: ext_job_template
 
+# Define the input_event job
+jobs:
+  input_event:
+    runs-on: ubuntu-latest
+    outputs:
+      input_data: ${{ steps.input_data.outputs.data }}
+    steps:
+    - name: Generate input data
+      id: input_data
+      run: |
+        echo "data=example_data" > input_data.txt
+    - name: Upload input data
+      uses: actions/upload-artifact@v2
+      with:
+        name: input_data
+        path: input_data.txt
