@@ -3,14 +3,18 @@ import sys
 import re
 import os
 
-if len(sys.argv) != 2:
-    print("Usage: python3 expect_script testpath")
-    sys.exit(1)
-
-testpath = sys.argv[1]
-
+#if len(sys.argv) != 2:
+#    print("Usage: python3 expect_script testpath")
+#    sys.exit(1)
+#
+#testpath = sys.argv[1]
+testpath = "path not passed"
+config = os.environ.get('CONFIG')
+fs_type = os.environ.get('FS_TYPE')
 
 print(f"Run test: avocado --show test run fs/xfstests.py -m {testpath} --max-parallel-tasks 1")
+print(f"environ: FS: {fs_type} with CONFIG: {config}")
+exit(0);
 
 #url = 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
 #local_filename = 'focal-server-cloudimg-amd64.img'
