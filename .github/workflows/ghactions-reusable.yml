@@ -12,6 +12,15 @@ on:
         description: "1k_quick or 4k_quick or 1k_auto or 4k_auto"
         required: true
         type: string
+      repo:
+        description: "repo details"
+        required: true
+        type: string
+      branch:
+        description: "repo branch"
+        required: true
+        type: string
+
 
 jobs:
   run_tests:
