@@ -42,10 +42,10 @@ jobs:
         FS_TYPE: ${{ matrix.fs_type }}
         CONFIG: ${{ matrix.config }}
     steps:
-    if: ${{ (github.event.inputs.wd_all == 'true' &&
-            (github.event.inputs.config == 'auto' && endsWith(matrix.config, '_auto')) ||
-            (github.event.inputs.config == 'quick' && !endsWith(matrix.config, '_auto')))
-          }}
+      if: ${{ (github.event.inputs.wd_all == 'true' &&
+              (github.event.inputs.config == 'auto' && endsWith(matrix.config, '_auto')) ||
+              (github.event.inputs.config == 'quick' && !endsWith(matrix.config, '_auto')))
+            }}
     - name: Run test
       run: |
           echo "Test running for ${{ matrix.fs_type }} with ${{ matrix.config }}"
