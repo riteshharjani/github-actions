@@ -75,7 +75,7 @@ jobs:
       run: |
         rm -rf /tmp/results/
         mkdir /tmp/results
-    - name: Run tests with config
+    - name: "Run ${{ inputs.fs_type }} tests with ${{ inputs.config }} config"
       run: |
         echo "Running ${{ inputs.fs_type }} tests with config ${{ inputs.config }}"
         echo $GITHUB_WORKSPACE
@@ -86,10 +86,10 @@ jobs:
         mount
         df -h
         cat tests/run_qemu_xfstests.py
-        sudo FS_TYPE=$FS_TYPE CONFIG=$CONFIG python3 tests/run_qemu_xfstests.py
+        sudo FS_TYPE=${{ inputs.fs_type }} CONFIG=${{ inputs.config }} python3 tests/run_qemu_xfstests.py
         sudo chown -R $USER:$USER /tmp/results
         sudo ls -al /tmp/results/
-    - name: Upload test results for ${{ inputs.fs_type }}-${{ inputs.config }}
+    - name: "Upload results for xfstests_artifacts_${{ inputs.fs_type }}_${{ inputs.config }}"
       uses: actions/upload-artifact@v3
       with:
         name: "xfstests_artifacts_${{ inputs.fs_type }}_${{ inputs.config }}"

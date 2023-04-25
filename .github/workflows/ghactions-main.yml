@@ -74,7 +74,7 @@ jobs:
           arch/x86/boot/.config
           System.map
           vmlinux
-  call-reusable-workflow-fstests-ext4:
+  call-fstests-ext4:
     needs: build_kernel
     strategy:
       matrix:
