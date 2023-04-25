@@ -52,26 +52,26 @@ jobs:
       with:
         repo: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
-    - name: Install dependencies
-      run: |
-        sudo apt-get update && sudo apt-get install -y gcc
-        sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms ccache
-    - name: Compile Linux
-      run: |
-        make defconfig
-        wget https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1 -O myconfig
-        cat myconfig >> .config
-        make olddefconfig
-        make CC="ccache gcc" -j$(nproc) Werror=1
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: kernel_artifacts
-        path: |
-          arch/x86/boot/bzImage
-          arch/x86/boot/.config
-          System.map
-          vmlinux
+#    - name: Install dependencies
+#      run: |
+#        sudo apt-get update && sudo apt-get install -y gcc
+#        sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms ccache
+#    - name: Compile Linux
+#      run: |
+#        make defconfig
+#        wget https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1 -O myconfig
+#        cat myconfig >> .config
+#        make olddefconfig
+#        make CC="ccache gcc" -j$(nproc) Werror=1
+#    - name: Upload artifacts
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: kernel_artifacts
+#        path: |
+#          arch/x86/boot/bzImage
+#          arch/x86/boot/.config
+#          System.map
+#          vmlinux
 #  ghactions:
 #    needs: build_kernel
 #    runs-on: self-hosted
