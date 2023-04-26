@@ -29,6 +29,7 @@ permissions:
 jobs:
   ghactions:
     runs-on: self-hosted
+    timeout-minutes: 720
     steps:
       # ensure you start clean
     - name: Clean up github workspace
