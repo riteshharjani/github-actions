@@ -45,9 +45,6 @@ on:
         description: "https://git.kernel.org/pub/scm/linux/kernel/git/   or default is github"
         required: true
         default: 'https://github.com/'
-        enum:
-          - 'https://github.com/'
-          - 'https://git.kernel.org/pub/scm/linux/kernel/git/'
 
 jobs:
   build_kernel:
