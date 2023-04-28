@@ -60,7 +60,7 @@ jobs:
         github-server-url: ${{ github.event.inputs.wd_giturl }}
         ref:  ${{ github.event.inputs.wd_branch }}
     - name: Checkout "${{ github.event.inputs.wd_branch }} url $${{ github.event.inputs.wd_giturl }}"
-      if: ${{ github.event.inputs.wd_giturl != 'https://github.com/'
+      if: ${{ github.event.inputs.wd_giturl != 'https://github.com/' }}
       run: |
         git init
         git remote add origin '${{ github.event.inputs.wd_giturl }}/${{ github.event.inputs.wd_repo }}.git'
