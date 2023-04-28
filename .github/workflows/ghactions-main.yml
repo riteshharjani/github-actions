@@ -62,6 +62,9 @@ jobs:
     - name: Checkout "${{ github.event.inputs.wd_branch }} url $${{ github.event.inputs.wd_giturl }}"
       if: ${{ github.event.inputs.wd_giturl != 'https://github.com/' }}
       run: |
+        if [ -d .git ]; then
+            rm -rf .git
+        fi
         git init || /bin/true
         git remote add origin '${{ github.event.inputs.wd_giturl }}/${{ github.event.inputs.wd_repo }}.git'
         git fetch --depth 1 origin ${{ github.event.inputs.wd_branch }}
