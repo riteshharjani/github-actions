@@ -42,10 +42,10 @@ on:
         required: true
         default: "['1k_auto', '4k_auto']"
       wd_giturl:
-        description: "git url for building kernel"
+        description: "https://git.kernel.org/pub/scm/linux/kernel/git/   or default is github"
         required: true
         default: 'https://github.com/'
-        choices:
+        enum:
           - 'https://github.com/'
           - 'https://git.kernel.org/pub/scm/linux/kernel/git/'
 
