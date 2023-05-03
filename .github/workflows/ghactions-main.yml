@@ -117,7 +117,11 @@ jobs:
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
         fi
         make olddefconfig
-        make CC="ccache gcc" -j$(nproc) Werror=1
+        if [ "$enable_debug" == 'true' ]; then
+            make CC="ccache gcc" -j$(nproc)
+        else
+            make CC="ccache gcc" -j$(nproc) Werror=1
+        fi
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
