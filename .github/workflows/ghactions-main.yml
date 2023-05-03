@@ -53,6 +53,7 @@ jobs:
       scheduled_run: ${{ steps.set_scheduled_run.outputs.value }}
     steps:
     - run: rm -rf *
+    - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
     - name: set scheduled_run variable
       id: set_scheduled_run
       if: ${{ github.event_name == 'schedule' }}
