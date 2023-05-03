@@ -33,6 +33,10 @@ on:
         description: "'1k_quick', '1k_auto', comma seperated array configs"
         required: true
         default: "['1k', '4k']"
+      wd_enable_debug:
+        description: 'true or false'
+        required: true
+        default: true
       wd_giturl:
         description: "https://git.kernel.org/pub/scm/linux/kernel/git/   or default is github"
         required: true
@@ -90,9 +94,19 @@ jobs:
     - name: Compile Linux
       run: |
         make defconfig
-        wget https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1 -O myconfig
-        cat myconfig >> .config
-        cat my_x86_config >> .config
+        enable_debug=${{ inputs.wd_enable_debug }}
+        if [ $enable_debug == 'true' ]; then
+            wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/config-6.1'
+            wget $wget_url -O myconfig
+            cat myconfig >> .config
+            cat my_x86_config >> .config
+        else
+            wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1'
+            wget $wget_url -O myconfig
+            cat myconfig >> .config
+            cat my_x86_config >> .config
+            cat my_x86_config_debug >> .config
+        fi
         make olddefconfig
         make CC="ccache gcc" -j$(nproc) Werror=1
     - name: Upload artifacts
