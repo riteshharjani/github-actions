@@ -71,13 +71,14 @@ jobs:
     - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git with branch ${{ inputs.wd_branch }}"
     - name: Checkout this repository
       uses: actions/checkout@v3
+      path: ${{ github.workspace }}/github-actions
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
       if: ${{ github.event.inputs.wd_giturl == 'https://github.com/' }}
       uses: actions/checkout@v3
       with:
         repository: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
-        path: linux
+        path: ${{ github.workspace }}/linux
     - name: Show pwd
       run: |
         pwd
@@ -98,19 +99,20 @@ jobs:
         sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms ccache
     - name: Compile Linux
       run: |
+        cd $GITHUB_WORKSPACE/github-actions/linux
         make defconfig
         enable_debug=${{ inputs.wd_enable_debug }}
         if [ "$enable_debug" == 'true' ]; then
             wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/config-6.1'
             wget $wget_url -O myconfig
-            cat myconfig >> .config
-            cat my_x86_config >> .config
-            cat my_x86_config_debug >> .config
+            cat $GITHUB_WORKSPACE/github-actions/myconfig >> .config
+            cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
+            cat $GITHUB_WORKSPACE/github-actions/my_x86_config_debug >> .config
         else
             wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1'
             wget $wget_url -O myconfig
-            cat myconfig >> .config
-            cat my_x86_config >> .config
+            cat $GITHUB_WORKSPACE/github-actions/myconfig >> .config
+            cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
         fi
         make olddefconfig
         make CC="ccache gcc" -j$(nproc) Werror=1
