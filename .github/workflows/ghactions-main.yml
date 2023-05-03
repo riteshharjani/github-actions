@@ -105,12 +105,14 @@ jobs:
         make defconfig
         enable_debug=${{ inputs.wd_enable_debug }}
         if [ "$enable_debug" == 'true' ]; then
+            echo "enable debug is true"
             wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/config-6.1'
             wget $wget_url -O myconfig
             cat myconfig >> .config
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config_debug >> .config
         else
+            echo "enable debug is false"
             wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1'
             wget $wget_url -O myconfig
             cat myconfig >> .config
@@ -118,8 +120,10 @@ jobs:
         fi
         make olddefconfig
         if [ "$enable_debug" == 'true' ]; then
+            echo "enable debug is true"
             make CC="ccache gcc" -j$(nproc)
         else
+            echo "enable debug is false"
             make CC="ccache gcc" -j$(nproc) Werror=1
         fi
     - name: Upload artifacts
