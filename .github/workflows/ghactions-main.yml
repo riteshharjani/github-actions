@@ -77,9 +77,16 @@ jobs:
       with:
         repository: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
+        path: ./
+    - name: Show pwd
+      run: |
+        pwd
+        ls -al
+        ls -al ../
     - name: Scheduled Checkout "${{ inputs.wd_branch }} url ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git"
       if: ${{ github.event.inputs.wd_giturl != 'https://github.com/' || needs.csv.outputs.scheduled_run == 'true' }}
       run: |
+        pwd
         if [ -d .git ]; then
             rm -rf .git
         fi
