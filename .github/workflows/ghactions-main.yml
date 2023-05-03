@@ -107,13 +107,13 @@ jobs:
         if [ "$enable_debug" == 'true' ]; then
             wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/config-6.1'
             wget $wget_url -O myconfig
-            cat $GITHUB_WORKSPACE/github-actions/myconfig >> .config
+            cat myconfig >> .config
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config_debug >> .config
         else
             wget_url='https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1'
             wget $wget_url -O myconfig
-            cat $GITHUB_WORKSPACE/github-actions/myconfig >> .config
+            cat myconfig >> .config
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
         fi
         make olddefconfig
