@@ -53,7 +53,7 @@ jobs:
       scheduled_run: ${{ steps.set_scheduled_run.outputs.value }}
     steps:
     - run: rm -rf *
-    - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
+    - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git with branch ${{ inputs.wd_branch }}"
     - name: set scheduled_run variable
       id: set_scheduled_run
       if: ${{ github.event_name == 'schedule' }}
@@ -64,25 +64,24 @@ jobs:
     needs: csv
     runs-on: self-hosted
     steps:
-    - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
+    - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git with branch ${{ inputs.wd_branch }}"
     - name: Checkout this repository
       uses: actions/checkout@v3
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
-      if: ${{ needs.csv.outputs.scheduled_run != 'true'  }}
+      if: ${{ github.event.inputs.wd_giturl == 'https://github.com/' }}
       uses: actions/checkout@v3
       with:
         repository: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
-    - name: Scheduled Checkout "${{ inputs.wd_branch }} url $${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}"
+    - name: Scheduled Checkout "${{ inputs.wd_branch }} url ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git"
       if: ${{ github.event.inputs.wd_giturl != 'https://github.com/' || needs.csv.outputs.scheduled_run == 'true' }}
       run: |
         if [ -d .git ]; then
             rm -rf .git
-            echo "::warning::.git found. Not cleaned up properly?"
         fi
         git init
         git remote add origin '${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git'
-        git fetch --depth 1 origin ${{ inputs.wd_branch }}
+        git fetch --progress --depth 1 origin ${{ inputs.wd_branch }}
         git checkout FETCH_HEAD
     - name: Install dependencies
       run: |
