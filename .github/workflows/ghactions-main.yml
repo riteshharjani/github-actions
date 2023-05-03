@@ -29,14 +29,6 @@ on:
         description: 'Run btrfs filesystems'
         required: true
         default: false
-      wd_repo:
-        description: 'linux repo and branch to run'
-        required: true
-        default: 'riteshharjani/linux'
-      wd_branch:
-        description: 'linux branch for this repo'
-        required: true
-        default: 'master'
       wd_configs:
         description: "'1k_quick', '1k_auto', comma seperated array configs"
         required: true
@@ -45,11 +37,25 @@ on:
         description: "https://git.kernel.org/pub/scm/linux/kernel/git/   or default is github"
         required: true
         default: 'https://github.com/'
+      wd_repo:
+        description: 'linux repo and branch to run'
+        required: true
+        default: 'riteshharjani/linux'
+      wd_branch:
+        description: 'linux branch for this repo'
+        required: true
+        default: 'master'
 
 jobs:
-  build_kernel:
+  cleanup_work:
     runs-on: self-hosted
     steps:
+    - run: rm -rf *
+  build_kernel:
+    needs: cleanup_work
+    runs-on: self-hosted
+    steps:
+    - run: echo "::warning::Building kernel for ${{ inputs.wd_branch }} at ${{ inputs.wd_repo }}"
     - name: Checkout this repository
       uses: actions/checkout@v3
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
@@ -64,8 +70,9 @@ jobs:
       run: |
         if [ -d .git ]; then
             rm -rf .git
+            echo "::warning::.git found. Not cleaned up properly?"
         fi
-        git init || /bin/true
+        git init
         git remote add origin '${{ github.event.inputs.wd_giturl }}/${{ github.event.inputs.wd_repo }}.git'
         git fetch --depth 1 origin ${{ github.event.inputs.wd_branch }}
         git checkout FETCH_HEAD
@@ -86,7 +93,7 @@ jobs:
         name: kernel_artifacts
         path: |
           arch/x86/boot/bzImage
-          arch/x86/boot/.config
+          .config
           System.map
           vmlinux
   fstests-ext2:
