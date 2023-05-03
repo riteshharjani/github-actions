@@ -92,6 +92,7 @@ jobs:
         make defconfig
         wget https://raw.githubusercontent.com/tytso/xfstests-bld/master/kernel-build/kernel-configs/perf-config-6.1 -O myconfig
         cat myconfig >> .config
+        cat my_x86_config >> .config
         make olddefconfig
         make CC="ccache gcc" -j$(nproc) Werror=1
     - name: Upload artifacts
