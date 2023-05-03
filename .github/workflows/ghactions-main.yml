@@ -32,7 +32,7 @@ on:
       wd_configs:
         description: "'1k_quick', '1k_auto', comma seperated array configs"
         required: true
-        default: "['1k_auto', '4k_auto']"
+        default: "['1k', '4k']"
       wd_giturl:
         description: "https://git.kernel.org/pub/scm/linux/kernel/git/   or default is github"
         required: true
@@ -47,15 +47,23 @@ on:
         default: 'master'
 
 jobs:
-  cleanup_work:
+  csv:
     runs-on: self-hosted
+    outputs:
+      scheduled_run: ${{ steps.set_scheduled_run.outputs.value }}
     steps:
     - run: rm -rf *
+    - name: set scheduled_run variable
+      id: set_scheduled_run
+      if: ${{ github.event_name == 'schedule' }}
+      run: |
+        SCHEDULED_RUN=true
+        echo "::set-output name=value::$SCHEDULED_RUN"
   build_kernel:
-    needs: cleanup_work
+    needs: csv
     runs-on: self-hosted
     steps:
-    - run: echo "::warning::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
+    - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
     - name: Checkout this repository
       uses: actions/checkout@v3
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
@@ -102,7 +110,7 @@ jobs:
       matrix:
         configs: ${{ fromJson(inputs.wd_configs) }}
     uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
-    if: ${{ github.event.inputs.wd_ext2 == 'true' || github.event.inputs.wd_all == 'true' }}
+    if: ${{ github.event.inputs.wd_ext2 == 'true' || github.event.inputs.wd_all == 'true' || needs.csv.outputs.scheduled_run == 'true' }}
     with:
       fs_type: "ext2"
       config: ${{ matrix.configs }}
@@ -114,7 +122,7 @@ jobs:
       matrix:
         configs: ${{ fromJson(inputs.wd_configs) }}
     uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
-    if: ${{ github.event.inputs.wd_ext4 == 'true' || github.event.inputs.wd_all == 'true' }}
+    if: ${{ github.event.inputs.wd_ext4 == 'true' || github.event.inputs.wd_all == 'true' || needs.csv.outputs.scheduled_run == 'true' }}
     with:
       fs_type: "ext4"
       config: ${{ matrix.configs }}
@@ -126,7 +134,7 @@ jobs:
       matrix:
         configs: ${{ fromJson(inputs.wd_configs) }}
     uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
-    if: ${{ github.event.inputs.wd_xfs == 'true' || github.event.inputs.wd_all == 'true' }}
+    if: ${{ github.event.inputs.wd_xfs == 'true' || github.event.inputs.wd_all == 'true' || needs.csv.outputs.scheduled_run == 'true' }}
     with:
       fs_type: "xfs"
       config: ${{ matrix.configs }}
@@ -138,7 +146,7 @@ jobs:
       matrix:
         configs: ${{ fromJson(inputs.wd_configs) }}
     uses: riteshharjani/github-actions/.github/workflows/ghaction-xfstests-2.yml@master
-    if: ${{ github.event.inputs.wd_btrfs == 'true' || github.event.inputs.wd_all == 'true' }}
+    if: ${{ github.event.inputs.wd_btrfs == 'true' || github.event.inputs.wd_all == 'true' || needs.csv.outputs.scheduled_run == 'true' }}
     with:
       fs_type: "btrfs"
       config: ${{ matrix.configs }}
