@@ -47,6 +47,8 @@ on:
         default: 'master'
 
 jobs:
+  dummy_build_kernel_${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}_${{ inputs.wd_branch }}:
+    - run: echo "::warning::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
   cleanup_work:
     runs-on: self-hosted
     steps:
@@ -55,7 +57,7 @@ jobs:
     needs: cleanup_work
     runs-on: self-hosted
     steps:
-    - run: echo "::warning::Building kernel for ${{ inputs.wd_branch }} at ${{ inputs.wd_repo }}"
+    - run: echo "::warning::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
     - name: Checkout this repository
       uses: actions/checkout@v3
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
