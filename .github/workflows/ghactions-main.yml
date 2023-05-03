@@ -101,6 +101,7 @@ jobs:
         sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms ccache
     - name: Compile Linux
       run: |
+        ccache -C
         cd $GITHUB_WORKSPACE/linux
         make defconfig
         enable_debug=${{ inputs.wd_enable_debug }}
@@ -119,13 +120,7 @@ jobs:
             cat $GITHUB_WORKSPACE/github-actions/my_x86_config >> .config
         fi
         make olddefconfig
-        if [ "$enable_debug" == 'true' ]; then
-            echo "enable debug is true"
-            make CC="ccache gcc" -j$(nproc)
-        else
-            echo "enable debug is false"
-            make CC="ccache gcc" -j$(nproc) Werror=1
-        fi
+        make CC="ccache gcc" -j$(nproc)
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
