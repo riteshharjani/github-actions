@@ -48,6 +48,7 @@ on:
 
 jobs:
   dummy_build_kernel_${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}_${{ inputs.wd_branch }}:
+    steps:
     - run: echo "::warning::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }} with branch ${{ inputs.wd_branch }}"
   cleanup_work:
     runs-on: self-hosted
