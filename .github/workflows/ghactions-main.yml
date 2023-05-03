@@ -72,17 +72,18 @@ jobs:
     - name: Checkout this repository
       uses: actions/checkout@v3
       with:
-        path: $GITHUB_WORKSPACE/github-actions
+        path: github-actions
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
       if: ${{ github.event.inputs.wd_giturl == 'https://github.com/' }}
       uses: actions/checkout@v3
       with:
         repository: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
-        path: $GITHUB_WORKSPACE/linux
+        path: linux
     - name: Show pwd
       run: |
         pwd
+        echo $GITHUB_WORKSPACE
         ls -al
         ls -al ../
     - name: Scheduled Checkout "${{ inputs.wd_branch }} url ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git"
@@ -100,7 +101,7 @@ jobs:
         sudo apt-get install -y build-essential libncurses-dev bison flex libssl-dev bc libelf-dev fakeroot dkms ccache
     - name: Compile Linux
       run: |
-        cd $GITHUB_WORKSPACE/github-actions/linux
+        cd $GITHUB_WORKSPACE/linux
         make defconfig
         enable_debug=${{ inputs.wd_enable_debug }}
         if [ "$enable_debug" == 'true' ]; then
