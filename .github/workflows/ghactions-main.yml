@@ -71,7 +71,8 @@ jobs:
     - run: echo "::notice::Building kernel for ${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git with branch ${{ inputs.wd_branch }}"
     - name: Checkout this repository
       uses: actions/checkout@v3
-      path: $GITHUB_WORKSPACE/github-actions
+      with:
+        path: $GITHUB_WORKSPACE/github-actions
     - name: Checkout "${{ github.event.inputs.wd_repo }} @ ${{ github.event.inputs.wd_branch }}" repository
       if: ${{ github.event.inputs.wd_giturl == 'https://github.com/' }}
       uses: actions/checkout@v3
