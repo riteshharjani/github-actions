@@ -77,7 +77,7 @@ jobs:
       with:
         repository: ${{ github.event.inputs.wd_repo }}
         ref:  ${{ github.event.inputs.wd_branch }}
-        path: ./
+        path: linux
     - name: Show pwd
       run: |
         pwd
@@ -87,9 +87,7 @@ jobs:
       if: ${{ github.event.inputs.wd_giturl != 'https://github.com/' || needs.csv.outputs.scheduled_run == 'true' }}
       run: |
         pwd
-        if [ -d .git ]; then
-            rm -rf .git
-        fi
+        mkdir linux && cd linux
         git init
         git remote add origin '${{ inputs.wd_giturl }}/${{ inputs.wd_repo }}.git'
         git fetch --progress --depth 1 origin ${{ inputs.wd_branch }}
