@@ -125,10 +125,10 @@ jobs:
       with:
         name: kernel_artifacts
         path: |
-          arch/x86/boot/bzImage
-          .config
-          System.map
-          vmlinux
+          ${{ github.workspace }}/linux/arch/x86/boot/bzImage
+          ${{ github.workspace }}/linux/.config
+          ${{ github.workspace }}/linux/System.map
+          ${{ github.workspace }}/linux/vmlinux
   fstests-ext2:
     needs: build_kernel
     strategy:
