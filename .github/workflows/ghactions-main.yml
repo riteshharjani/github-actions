@@ -34,7 +34,7 @@ on:
         required: true
         default: "['1k', '4k']"
       wd_enable_debug:
-        description: 'true or false'
+        description: 'enable_debug, true or false'
         required: true
         default: true
       wd_giturl:
