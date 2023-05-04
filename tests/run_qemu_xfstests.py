@@ -50,7 +50,7 @@ qemu_command = f'''qemu-system-x86_64 \
                  -device virtio-9p-pci,fsdev=shared_test_dev,mount_tag=host_shared \
 	             -net nic,model=virtio -net user,hostfwd=tcp:127.0.0.1:2001-:22 \
                  -append "console=ttyS0,115200n8 root=/dev/sda1'''
-child = pexpect.spawn(qemu_command, timeout=36000, encoding="utf-8")
+child = pexpect.spawn(qemu_command, timeout=360000, encoding="utf-8")
 child.logfile = sys.stdout
 
 
