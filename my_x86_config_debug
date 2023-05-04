@@ -1,6 +1,6 @@
 # TAG: kasan
-CONFIG_KASAN=y
-CONFIG_KASAN_INLINE=y
+ CONFIG_KASAN is not enabled
+ CONFIG_KASAN_INLINE is not enabled
 
 # TAG: debug
 CONFIG_DEBUG_INFO_BTF=y
