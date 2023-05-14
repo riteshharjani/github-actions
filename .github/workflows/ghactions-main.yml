@@ -30,13 +30,13 @@ on:
         required: true
         default: false
       wd_configs:
-        description: "'1k_quick', '1k_auto', comma seperated array configs"
+        description: "'1k_quick', '1k_auto', 'nojournal_1k', 'nojournal_4k', 'ext3_auto', 'adv2_auto'"
         required: true
-        default: "['1k', '4k']"
+        default: "['1k_auto', '4k_auto']"
       wd_enable_debug:
         description: 'enable_debug, true or false'
         required: true
-        default: true
+        default: false
       wd_giturl:
         description: "https://git.kernel.org/pub/scm/linux/kernel/git/   or default is github"
         required: true
