@@ -38,6 +38,9 @@ jobs:
         rm -rf *
     - name: Checkout repository
       uses: actions/checkout@v3
+    - name: Setup problem matchers
+      run: |
+        echo "::add-matcher::.github/problem-matchers/kernel.json"
     - name: Download artifacts
       uses: actions/download-artifact@v3
       with:

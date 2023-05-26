@@ -1,0 +1,27 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "kernel",
+      "pattern": [
+        {
+          "regexp": "^\\[.*\\] WARNING: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
+          "file": 1,
+          "line": 2,
+          "severity": 3,
+          "message": 4
+        },
+        {
+          "regexp": "^\\[.*\\] BUG: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
+          "file": 1,
+          "line": 2,
+          "severity": 3,
+          "message": 4
+        },
+        {
+          "regexp": "^\\[.*\\] Call Trace: (.*)$",
+          "message": 1
+        }
+      ]
+    }
+  ]
+}
