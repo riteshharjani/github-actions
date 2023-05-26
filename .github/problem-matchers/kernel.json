@@ -4,7 +4,7 @@
       "owner": "kernel-warning",
       "pattern": [
         {
-          "regexp": "^\\[.*\\] WARNING: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
+          "regexp": "^ *\\[.*\\] WARNING: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
           "file": 1,
           "line": 2,
           "severity": 3,
@@ -16,7 +16,7 @@
       "owner": "kernel-bug",
       "pattern": [
         {
-          "regexp": "^\\[.*\\] BUG: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
+          "regexp": "^ *\\[.*\\] BUG: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
           "file": 1,
           "line": 2,
           "severity": 3,
@@ -28,7 +28,7 @@
       "owner": "kernel-calltrace",
       "pattern": [
         {
-          "regexp": "^\\[.*\\] Call Trace: (.*)$",
+          "regexp": "^ *\\[.*\\] Call Trace: (.*)$",
           "message": 1
         }
       ]
