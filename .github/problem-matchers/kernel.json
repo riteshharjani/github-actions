@@ -1,7 +1,7 @@
 {
   "problemMatcher": [
     {
-      "owner": "kernel",
+      "owner": "kernel-warning",
       "pattern": [
         {
           "regexp": "^\\[.*\\] WARNING: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
@@ -9,14 +9,24 @@
           "line": 2,
           "severity": 3,
           "message": 4
-        },
+        }
+      ]
+    },
+    {
+      "owner": "kernel-bug",
+      "pattern": [
         {
           "regexp": "^\\[.*\\] BUG: .* at (.*):(\\d+) (.*)\\[(.*)\\]$",
           "file": 1,
           "line": 2,
           "severity": 3,
           "message": 4
-        },
+        }
+      ]
+    },
+    {
+      "owner": "kernel-calltrace",
+      "pattern": [
         {
           "regexp": "^\\[.*\\] Call Trace: (.*)$",
           "message": 1
