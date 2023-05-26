@@ -126,6 +126,7 @@ child.sendline(f"avocado --show test run --job-results-dir /root/host_shared/ fs
 patterns = ['root@ubuntu.*#', 'Call Trace:']
 matched_idx = child.expect(patterns)
 if (matched_idx == 1):
+    print("Error: Call Trace printed")
     sys.exit(1)
 
 print(child.before)
